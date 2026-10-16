@@ -1,20 +1,21 @@
-const CACHE="ascension-v1";
+/* ascension. version 2 */
+const CACHE="ascension-v2";
 const CORE=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./icon-maskable-512.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
+self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{
   const req=e.request; if(req.method!=="GET")return;
   const url=new URL(req.url);
   if(url.origin===location.origin){
-    // app files: serve instantly from cache, refresh in the background
-    e.respondWith(caches.open(CACHE).then(async c=>{
-      const hit=await c.match(req,{ignoreSearch:true})||(req.mode==="navigate"?await c.match("./index.html"):null);
-      const net=fetch(req).then(r=>{if(r.ok)c.put(req,r.clone());return r}).catch(()=>hit);
-      return hit||net;
-    }));
+    if(req.mode==="navigate"||url.pathname.endsWith("/index.html")){
+      // the app page: get the newest version when online, use the saved copy offline
+      e.respondWith(fetch(req,{cache:"no-store"}).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(x=>x.put("./index.html",c))}return r})
+        .catch(()=>caches.match("./index.html")));
+      return;
+    }
+    e.respondWith(caches.match(req,{ignoreSearch:true}).then(hit=>hit||fetch(req).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(x=>x.put(req,c))}return r})));
   } else if(/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)){
-    // fonts: keep a copy so the app looks right offline
-    e.respondWith(caches.open(CACHE).then(async c=>{const hit=await c.match(req);if(hit)return hit;
+    e.respondWith(caches.open("ascension-fonts").then(async c=>{const hit=await c.match(req);if(hit)return hit;
       try{const r=await fetch(req);c.put(req,r.clone());return r}catch(err){return new Response("",{status:504})}}));
   }
 });
@@ -24,11 +25,11 @@ function readState(){return new Promise(res=>{const r=indexedDB.open("ascension"
   r.onerror=()=>res(null)})}
 self.addEventListener("periodicsync",e=>{if(e.tag!=="ascension-daily")return;
   e.waitUntil(readState().then(s=>{if(!s)return;
-    const d=new Date(),t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const d=new Date(),p=n=>String(n).padStart(2,"0"),t=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()),hm=p(d.getHours())+":"+p(d.getMinutes());
     const blocks=(s.blocks||[]).filter(b=>b.days.includes(d.getDay())).sort((a,b)=>a.start<b.start?-1:1);
     const tasks=(s.tasks||[]).filter(x=>!x.done&&x.due&&x.due<=t).length;
     const revs=(s.topics||[]).filter(x=>x.next<=t).length;
-    const first=blocks.find(b=>b.start>=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"));
+    const first=blocks.find(b=>b.start>=hm);
     return self.registration.showNotification("ascension.",{tag:"daily-"+t,icon:"./icon-192.png",
       body:(first?"Next: "+first.title+" at "+first.start+". ":"")+tasks+" task"+(tasks===1?"":"s")+" due · "+revs+" review"+(revs===1?"":"s")});
   }))});
