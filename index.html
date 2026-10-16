@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ascension.</title>
+<title>legacy.</title>
+<!-- formerly ascension. -->
 <meta name="theme-color" content="#060606">
 <meta name="color-scheme" content="dark">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -55,9 +56,9 @@
     wire(sh){const t=sh.querySelector("#ntfTxt"),b=sh.querySelector("#ntfBtn");if(!t||!b)return;
       const upd=()=>{if(!("Notification" in window)){t.textContent="This browser can't show notifications.";b.hidden=true;return}
         const p=Notification.permission;
-        t.textContent=p==="granted"?"On. You'll get an alert 10 minutes before each timetable block while ascension. is open or recently used, plus a daily summary when your phone allows it. For alerts that always arrive, also use Remind me weekly on each block.":p==="denied"?"Blocked. Turn notifications on for this app in your phone's Settings › Apps.":"Get an alert before each timetable block starts.";
+        t.textContent=p==="granted"?"On. You'll get an alert 10 minutes before each timetable block while legacy. is open or recently used, plus a daily summary when your phone allows it. For alerts that always arrive, also use Remind me weekly on each block.":p==="denied"?"Blocked. Turn notifications on for this app in your phone's Settings › Apps.":"Get an alert before each timetable block starts.";
         b.hidden=p!=="default"};
-      upd();b.onclick=async()=>{await Notification.requestPermission();upd();tick();if(on())show("ascension.","Notifications are on.","asc-test")}}
+      upd();b.onclick=async()=>{await Notification.requestPermission();upd();tick();if(on())show("legacy.","Notifications are on.","asc-test")}}
   };
   try{const s0=JSON.parse(localStorage.getItem("studydesk.v1"));if(s0)put("state",s0)}catch(e){}
 })();
@@ -247,6 +248,76 @@ section.block{display:flex;flex-direction:column;gap:10px}
 .tline .check{width:20px;height:20px;border-width:1px}
 .tline .check svg{width:12px;height:12px}
 .free{font-size:.84rem;color:var(--dim);padding:4px 0 2px 17px}
+/* v4 pickers */
+.fl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:-6px}
+.pick{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pk{border:1px solid var(--line-hi);background:var(--sunk);color:var(--fg);border-radius:0;padding:8px 11px;font-size:.88rem;display:inline-flex;align-items:center;gap:7px;min-height:38px}
+.pk i{width:7px;height:7px;background:var(--c)}
+.pk small{font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.pk[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pk[aria-pressed="true"] small{color:var(--bg)}
+.pk[aria-pressed="true"] i{background:var(--bg)}
+.pk.ghost{border-style:dashed;color:var(--muted);background:transparent}
+.pk .px{font-weight:600;color:var(--ink);margin-left:2px}
+.pk[aria-pressed="true"] .px{color:var(--bg)}
+.pk[data-armed]{border-color:var(--ink)}
+.pnew{display:flex;flex-wrap:wrap;gap:6px;width:100%;margin-top:2px}
+.pnew input{flex:1 1 140px;min-width:0;border:1px solid var(--line-hi);background:var(--sunk);color:var(--fg);padding:9px 10px;border-radius:0}
+.pact{display:flex;gap:6px}
+.pdate{border:1px solid var(--line-hi);background:var(--sunk);color:var(--fg);padding:7px 8px;border-radius:0;min-height:38px;flex:1 1 130px;min-width:0}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.days button{border:1px solid var(--line-hi);background:var(--sunk);color:var(--muted);border-radius:0;aspect-ratio:1;max-height:48px;font-weight:600;font-size:.82rem;padding:0}
+.days button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sheet select#f-h,.sheet select#f-m{border:1px solid var(--line-hi);background:var(--sunk);border-radius:0;padding:11px 12px;font-size:1.05rem;font-family:var(--f-mono);color:var(--fg);width:100%;min-width:0}
+.sum{margin:0;font-family:var(--f-mono);font-size:.78rem;color:var(--ink);border-left:1px solid var(--line-hi);padding-left:10px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.trow .dn{display:block;font-weight:600}
+.trow .dk{display:block;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+/* lock screen */
+.lock{position:fixed;inset:0;z-index:50;background:var(--bg);background-image:var(--grain);display:flex;align-items:center;justify-content:center;
+  padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));padding-block:calc(24px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-bottom,0px))}
+.lockin{width:100%;max-width:300px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.lockmark{width:132px;height:132px}
+.lockname{font-family:var(--f-display);font-weight:400;font-size:2rem;letter-spacing:.2em;color:var(--ink);margin:6px 0 0;padding-left:.2em}
+.lockq{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin:-6px 0 14px}
+#lockPw{width:100%;border:0;border-bottom:1px solid var(--line-hi);background:transparent;color:var(--ink);font-family:var(--f-mono);font-size:1.1rem;letter-spacing:.3em;text-align:center;padding:12px 4px;border-radius:0}
+#lockPw:focus{outline:none;border-bottom-color:var(--ink)}
+.lockerr{min-height:1.2em;margin:0;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);letter-spacing:.06em}
+.lockin.shake{animation:shake .32s}
+@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@media (prefers-reduced-motion:reduce){.lockin.shake{animation:none}}
+/* trackers */
+.trks{display:flex;flex-direction:column;gap:6px}
+.trk{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;min-width:0}
+.trk:focus-visible{outline:2px solid var(--ink)}
+.trh{display:flex;align-items:baseline;gap:10px;justify-content:space-between}
+.trn{font-weight:600;color:var(--fg);overflow-wrap:anywhere}
+.trl{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);text-align:right}
+.trp{font-family:var(--f-display);font-size:1.6rem;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.trp small{font-size:.8rem;color:var(--muted);margin-left:2px}
+.bar2{display:block;height:4px;background:var(--line-hi);position:relative;overflow:hidden}
+.bar2 i{position:absolute;inset:0 auto 0 0;background:var(--ink);transition:width .5s}
+.bar2.thin{height:2px;flex:1}
+.trs{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);line-height:1.5}
+.trs b{color:var(--ink);font-weight:400}
+.cdn{font-family:var(--f-display);font-size:2.1rem;line-height:1;color:var(--ink);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.dual{display:flex;flex-direction:column;gap:5px}
+.dual>span{display:flex;align-items:center;gap:10px}
+.dual em{font-style:normal;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);width:3.2em}
+/* day + habits */
+.agenda2{display:flex;flex-direction:column}
+.brow.sug{border-left:1px dashed var(--line-hi);padding-left:8px;margin-left:-9px}
+.brow.sug .bn{color:var(--muted)}
+.brow .bn small{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.habit{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.hb{display:flex;flex-direction:column;gap:5px;min-width:0}
+.hb .dn{font-weight:600}
+.hb .dk{font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.hdots{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px;max-width:320px}
+.hdots i{display:block;aspect-ratio:1;background:var(--sunk);border:1px solid var(--line)}
+.hdots i.on{background:var(--ink);border-color:var(--ink)}
+.hdots i.miss{border-color:var(--muted)}
+.hdots i.tod{border-color:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{display:inline-block;width:16px}
@@ -298,7 +369,7 @@ label.f input,label.f select{border:1px solid var(--line-hi);background:var(--su
 
 <div class="app">
   <header class="top">
-    <h1 class="brand" id="brand"><svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" fill="#060606"/><g fill="none" stroke="#2c2c29" stroke-width="3"><ellipse cx="256" cy="186" rx="48" ry="118"/><ellipse cx="256" cy="186" rx="92" ry="118"/><line x1="256" y1="68" x2="256" y2="304"/><ellipse cx="256" cy="186" rx="118" ry="30"/><path d="M152 131 Q256 151 360 131"/><path d="M152 241 Q256 261 360 241"/></g><circle cx="256" cy="186" r="118" fill="none" stroke="#cfcfc8" stroke-width="5"/><polygon points="220,332 292,332 266,404 246,404" fill="#cfcfc8"/><g fill="none" stroke="#cfcfc8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><polyline points="224,336 180,300 150,240"/><polyline points="288,336 332,300 362,240"/><polyline points="258,402 310,424 314,466"/><polyline points="250,402 232,466 176,464"/></g><circle cx="256" cy="314" r="14" fill="#cfcfc8"/><line x1="140" y1="476" x2="372" y2="476" stroke="#4a4a46" stroke-width="2"/></svg><span>ascension.<small id="dateline"></small></span></h1>
+    <h1 class="brand" id="brand"><svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" fill="#060606"/><g fill="none" stroke="#2c2c29" stroke-width="3"><ellipse cx="256" cy="186" rx="48" ry="118"/><ellipse cx="256" cy="186" rx="92" ry="118"/><line x1="256" y1="68" x2="256" y2="304"/><ellipse cx="256" cy="186" rx="118" ry="30"/><path d="M152 131 Q256 151 360 131"/><path d="M152 241 Q256 261 360 241"/></g><circle cx="256" cy="186" r="118" fill="none" stroke="#cfcfc8" stroke-width="5"/><polygon points="220,332 292,332 266,404 246,404" fill="#cfcfc8"/><g fill="none" stroke="#cfcfc8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><polyline points="224,336 180,300 150,240"/><polyline points="288,336 332,300 362,240"/><polyline points="258,402 310,424 314,466"/><polyline points="250,402 232,466 176,464"/></g><circle cx="256" cy="314" r="14" fill="#cfcfc8"/><line x1="140" y1="476" x2="372" y2="476" stroke="#4a4a46" stroke-width="2"/></svg><span>legacy.<small id="dateline"></small></span></h1>
     <button class="iconbtn" id="settingsBtn" aria-label="Settings and categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </header>
   <main id="view"></main>
@@ -315,6 +386,14 @@ label.f input,label.f select{border:1px solid var(--line-hi);background:var(--su
   <button role="tab" data-tab="exams" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>Dates</button>
 </div></nav>
 
+<div id="lock" class="lock"><form id="lockForm" class="lockin" autocomplete="off">
+  <svg viewBox="0 0 512 512" aria-hidden="true" class="lockmark"><rect width="512" height="512" fill="#060606"/><g fill="none" stroke="#2c2c29" stroke-width="3"><ellipse cx="256" cy="186" rx="48" ry="118"/><ellipse cx="256" cy="186" rx="92" ry="118"/><line x1="256" y1="68" x2="256" y2="304"/><ellipse cx="256" cy="186" rx="118" ry="30"/><path d="M152 131 Q256 151 360 131"/><path d="M152 241 Q256 261 360 241"/></g><circle cx="256" cy="186" r="118" fill="none" stroke="#cfcfc8" stroke-width="5"/><polygon points="220,332 292,332 266,404 246,404" fill="#cfcfc8"/><g fill="none" stroke="#cfcfc8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><polyline points="224,336 180,300 150,240"/><polyline points="288,336 332,300 362,240"/><polyline points="258,402 310,424 314,466"/><polyline points="250,402 232,466 176,464"/></g><circle cx="256" cy="314" r="14" fill="#cfcfc8"/><line x1="140" y1="476" x2="372" y2="476" stroke="#4a4a46" stroke-width="2"/></svg>
+  <h1 class="lockname">legacy.</h1>
+  <p class="lockq">last man standing</p>
+  <input id="lockPw" type="password" inputmode="text" autocomplete="current-password" placeholder="password" aria-label="Password" autocapitalize="off" spellcheck="false">
+  <button type="submit" class="btn primary" style="flex:none;width:100%">Enter</button>
+  <p class="lockerr" id="lockErr" role="alert"></p>
+</form></div>
 <div id="sheetHost"></div>
 <div id="toastHost"></div>
 
@@ -373,7 +452,7 @@ function seed(){
   };
 }
 const STANDALONE=true;
-const APP_VERSION="3";
+const APP_VERSION="11";
 let S=null, LS_KEY="studydesk.v1";
 function loadLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){return null}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
@@ -385,6 +464,8 @@ function migrate(st){
     st.migGymLooks=true;
   }
   if(!st.blocks)st.blocks=[];
+  if(!st.log){st.log=(st.tasks||[]).filter(t=>t.done&&t.doneAt).map(t=>({id:t.id,d:t.doneAt,m:t.mins||30,cat:t.cat,ex:t.exam||null}))}
+  if(!st.trackers){st.trackers=[{id:"trk-today",type:"bar",name:"Today",scope:{kind:"today"},created:today(),createdAt:Date.now()},{id:"trk-next",type:"count",name:"Next exam",to:{kind:"next"},created:today(),createdAt:Date.now()}]}
   return st;
 }
 if(!S.blocks)S.blocks=[];
@@ -394,8 +475,10 @@ S=migrate(S);
 let dbRef=null, syncState="local", saveTimer=null, lastRemote=0;
 function persist(){
   S.updated=Date.now();
+  if(STANDALONE)trackDeletes();
   saveLocal();
   if(window.ascNotify)window.ascNotify.mirror(S);
+  if(STANDALONE){queuePush();queueSync()}
   clearTimeout(saveTimer);
   saveTimer=setTimeout(pushRemote,600);
 }
@@ -432,8 +515,8 @@ function nextExamFor(task){
   return S.exams.filter(e=>e.cat===task.cat&&diff(t,e.date)>=0).sort((a,b)=>a.date<b.date?-1:1)[0];
 }
 function scoreTask(task){
-  const t=today(); let s=task.imp*10; const why=[];
-  why.push(["","Low importance","Medium importance","High importance"][task.imp]);
+  const t=today(); let s=Math.min(task.imp,3)*10; const why=[];
+  if(task.imp>=4){s+=100;why.push("top priority")} else why.push(["","Low importance","Medium importance","High importance"][task.imp]);
   if(task.due){
     const d=diff(t,task.due);
     if(d<0){s+=40+3*Math.min(-d,10);why.push("overdue")}
@@ -446,7 +529,7 @@ function scoreTask(task){
   if(!task.due&&!ex){const age=Math.max(0,diff(task.created||t,t));const b=Math.min(10,Math.round(age*0.6));if(b>=3){s+=b;why.push("waiting a while")}}
   return {score:s,why};
 }
-function band(s){return s>=55?["Urgent","--urgent"]:s>=35?["High","--high"]:s>=20?["Medium","--med"]:["Low","--low"]}
+function band(s){return s>=130?["Top","--urgent"]:s>=55?["Urgent","--urgent"]:s>=35?["High","--high"]:s>=20?["Medium","--med"]:["Low","--low"]}
 function ranked(list){return list.map(x=>({t:x,...scoreTask(x)})).sort((a,b)=>b.score-a.score)}
 
 /* ---------- repeating routines ---------- */
@@ -482,7 +565,7 @@ function preview(tp,q){
 }
 function rateTopic(id,q){
   const tp=S.topics.find(x=>x.id===id); const p=preview(tp,q);
-  Object.assign(tp,{ease:p.ease,reps:p.reps,interval:p.interval,next:p.next});
+  Object.assign(tp,{ease:p.ease,reps:p.reps,interval:p.interval,next:p.next,last:today()});
   tp.hist=(tp.hist||[]).concat([q]).slice(-12);
   persist(); render();
   toast("Next review "+rel(p.next)+(p.capped?" (before "+p.capped+")":""));
@@ -514,9 +597,9 @@ async function allowCal(){
 }
 function calCard(){
   const st=cal.state;
-  const label={checking:"Checking…",working:"Connecting…",on:"Google Calendar connected",ask:"Connected — needs your permission",off:"Not connected",reauth:"Connection expired",unavailable:"Open ascension. in the Claude app or claude.ai to connect"}[st];
-  const body=st==="on"?`<p class="help">ascension. can reach your calendar. Phone reminders for tasks, exams and reviews will come from Google Calendar on your Pixel.</p>`:
-    st==="ask"?`<p class="help">Your calendar is linked to Claude. Allow ascension. to use it.</p><div class="actions"><button class="btn primary" data-act="allowCal">Allow access</button></div>`:
+  const label={checking:"Checking…",working:"Connecting…",on:"Google Calendar connected",ask:"Connected — needs your permission",off:"Not connected",reauth:"Connection expired",unavailable:"Open legacy. in the Claude app or claude.ai to connect"}[st];
+  const body=st==="on"?`<p class="help">legacy. can reach your calendar. Phone reminders for tasks, exams and reviews will come from Google Calendar on your Pixel.</p>`:
+    st==="ask"?`<p class="help">Your calendar is linked to Claude. Allow legacy. to use it.</p><div class="actions"><button class="btn primary" data-act="allowCal">Allow access</button></div>`:
     st==="off"||st==="reauth"?`<p class="help">${st==="reauth"?"Sign in to Google again":"Sign in with Google"} on the Connectors page (find Google Calendar), then come back here and tap Check again.</p>
       <div class="actions"><a class="btn primary" href="${CONNECT_URL}" target="_blank" rel="noopener">Connect Google Calendar</a><button class="btn" data-act="checkCal">Check again</button></div>
       <p class="help" style="font-size:.78rem">Link doesn't open? Go to claude.ai › Settings › Connectors: <span style="user-select:all;font-family:var(--f-mono)">${CONNECT_URL}</span></p>`:"";
@@ -527,14 +610,14 @@ function refreshCal(){if(tab==="today"&&!document.getElementById("sheetHost").in
 /* ---------- Google Calendar links (real phone reminders) ---------- */
 function gcalBlock(b){
   const d0=firstBlockDate(b), z=x=>x.replace(":","")+"00";
-  const p=new URLSearchParams({action:"TEMPLATE",text:b.title,details:"Weekly timetable · "+catOf(b.cat).name+" · from ascension.",ctz:"Europe/London"});
+  const p=new URLSearchParams({action:"TEMPLATE",text:b.title,details:"Weekly timetable · "+catOf(b.cat).name+" · from legacy.",ctz:"Europe/London"});
   p.set("dates",d0.replace(/-/g,"")+"T"+z(b.start)+"/"+d0.replace(/-/g,"")+"T"+z(b.end>b.start?b.end:b.start));
   const BY=["SU","MO","TU","WE","TH","FR","SA"];
   p.set("recur","RRULE:FREQ=WEEKLY;BYDAY="+b.days.map(x=>BY[x]).join(","));
   return "https://calendar.google.com/calendar/render?"+p.toString();
 }
 function gcal(title,date,details,timeHHMM,recur){
-  const p=new URLSearchParams({action:"TEMPLATE",text:title,details:details||"Added from ascension."});
+  const p=new URLSearchParams({action:"TEMPLATE",text:title,details:details||"Added from legacy."});
   if(timeHHMM){const s=date.replace(/-/g,"")+"T"+timeHHMM.replace(":","")+"00";const [h,m]=timeHHMM.split(":").map(Number);const e=date.replace(/-/g,"")+"T"+pad((h+(m+30>=60?1:0))%24)+pad((m+30)%60)+"00";p.set("dates",s+"/"+e)}
   else p.set("dates",date.replace(/-/g,"")+"/"+addDays(date,1).replace(/-/g,""));
   if(recur)p.set("recur",recur);
@@ -558,7 +641,7 @@ function taskRow(r){
   return `<div class="task ${t.done?"done":""}" style="--pc:var(${bv})">
     <button class="check" data-act="toggle" data-id="${t.id}" aria-pressed="${t.done}" aria-label="Mark done">${t.done?I.check:""}</button>
     <div class="tbody"><div class="ttl">${esc(t.title)}</div>
-      <div class="chips">${t.done?"":`<span class="chip prio">${bn}</span>`}${chipCat(t.cat)}
+      <div class="chips">${t.done?"":`<span class="chip prio">${bn}</span>`}${r.slot?`<span class="chip late">${slotTxt(r.slot)}</span>`:""}${chipCat(t.cat)}
         ${t.due?`<span class="chip ${late?"late":""}">${late?"Overdue · ":"Due "}${esc(rel(t.due))}</span>`:""}
         ${t.mins?`<span class="chip">${t.mins} min</span>`:""}${t.repeat&&t.repeat.type!=="none"?`<span class="chip">↻ ${esc(repeatLabel(t.repeat))}</span>${t.streak?`<span class="chip">streak ${t.streak}</span>`:""}`:""}</div>
       ${t.done?"":`<div class="why">${esc(r.why.join(" · "))}</div>`}</div>
@@ -582,7 +665,7 @@ function reviewCard(tp){
   const opts=[[1,"Again","again"],[2,"Hard",""],[3,"Good",""],[4,"Easy","easy"]];
   const hist=(tp.hist||[]).map(q=>`<i style="height:${q*5+2}px;background:var(${q===1?"--urgent":q===4?"--good":"--med"})"></i>`).join("");
   return `<div class="rev"><div class="row"><div class="tbody"><div class="ttl">${esc(tp.name)}</div>
-    <div class="chips">${chipCat(tp.cat)}<button class="chip link" data-act="editTopic" data-id="${tp.id}">for: ${esc(examLabel(tp))}</button><span class="chip">Review #${tp.reps+1}</span>${tp.next<today()?`<span class="chip late">${esc(rel(tp.next))}</span>`:""}</div></div>
+    <div class="chips">${chipCat(tp.cat)}<button class="chip link" data-act="editTopic" data-id="${tp.id}">towards: ${esc(examLabel(tp))}</button><span class="chip">Review #${tp.reps+1}</span>${tp.next<today()?`<span class="chip late">${esc(rel(tp.next))}</span>`:""}</div></div>
     ${hist?`<div class="hrow" title="Recent recall ratings">${hist}</div>`:""}
     ${topicTools(tp)}</div>
     <p class="help">Recall it from memory first (blurt, flashcards or a past-paper question), then rate how it went.</p>
@@ -642,17 +725,113 @@ function loadSampleWeek(){
   S.example=true; persist(); render(); toast("Sample week loaded");
 }
 
-function renderToday(){
-  const open=S.tasks.filter(t=>!t.done);
+/* ---------- day planner: suggested slots (all on-device) ---------- */
+function dayWindow(){return {a:toMin(S.dayStart||"07:00"),b:toMin(S.dayEnd||"22:30")}}
+function freeGaps(d){const w=dayWindow();let a=w.a;
+  if(d===today()){const n=nowMin();a=Math.max(a,Math.ceil(n/5)*5)}
+  const busy=blocksOn(d).map(b=>[toMin(b.start),toMin(b.end)]).sort((x,y)=>x[0]-y[0]);
+  const gaps=[];let cur=a;for(const [s0,e0] of busy){if(s0>cur)gaps.push([cur,Math.min(s0,w.b)]);cur=Math.max(cur,e0);if(cur>=w.b)break}
+  if(cur<w.b)gaps.push([cur,w.b]);return gaps.filter(g=>g[1]-g[0]>=10)}
+const BUF=10;
+function placeInto(gaps,m){for(const g of gaps){if(g[1]-g[0]>=m){const s0=g[0];g[0]=Math.min(g[1],s0+m+BUF);return [s0,s0+m]}}return null}
+function planTasks(d){const t=today(),open=S.tasks.filter(x=>!x.done);
   const r=ranked(open);
-  const must=r.filter(x=>x.t.due&&x.t.due<=today());
-  const rest=r.filter(x=>!(x.t.due&&x.t.due<=today()));
-  let budget=S.minutesPerDay||180, used=must.reduce((a,x)=>a+(x.t.mins||30),0);
-  const plan=[...must];
+  if(d!==t)return r.filter(x=>x.t.due===d||(x.t.repeat&&x.t.repeat.type!=="none"&&x.t.due&&d>x.t.due&&matches(x.t,d)));
+  const must=r.filter(x=>x.t.due&&x.t.due<=t);
+  const rest=r.filter(x=>!(x.t.due&&x.t.due<=t)&&!(x.t.repeat&&x.t.repeat.type!=="none"));
+  let budget=S.minutesPerDay||180,used=must.reduce((a,x)=>a+(x.t.mins||30),0);const plan=[...must];
   for(const x of rest){const m=x.t.mins||30;if(used+m<=budget||plan.length<3){plan.push(x);used+=m}}
+  return plan.sort((a,b)=>b.score-a.score)}
+function slotsFor(d,plan){const gaps=freeGaps(d),out={};for(const x of plan){const sl=placeInto(gaps,x.t.mins||30);if(sl)out[x.t.id]=sl}return {slots:out,gaps}}
+function suggestSlot(d,mins,exclude){const plan=planTasks(d).filter(x=>x.t.id!==exclude);const {gaps}=slotsFor(d,plan);return placeInto(gaps,mins)}
+const slotTxt=sl=>hhmm(sl[0])+"–"+hhmm(sl[1]);
+function yourDay(plan,slots){const d=today(),n=nowMin();
+  const items=[...blocksOn(d).map(b=>({a:toMin(b.start),b:toMin(b.end),title:b.title,cat:b.cat,kind:"block",id:b.id})),
+    ...plan.filter(x=>slots[x.t.id]).map(x=>({a:slots[x.t.id][0],b:slots[x.t.id][1],title:x.t.title,cat:x.t.cat,kind:"task",id:x.t.id}))].sort((p,q)=>p.a-q.a);
+  const left=plan.filter(x=>!slots[x.t.id]);
+  return `<section class="block"><div class="sechead"><h2>Your day</h2><span class="meta">${esc(S.dayStart||"07:00")}–${esc(S.dayEnd||"22:30")}</span></div>
+    ${items.length?`<div class="agenda2">${items.map(it=>`<button class="brow ${it.kind==="task"?"sug":""} ${it.b<=n?"past":it.a<=n?"now":""}" style="--c:${catOf(it.cat).color}" data-act="${it.kind==="task"?"editTask":"editBlock"}" data-id="${it.id}"><i></i><span class="bt">${hhmm(it.a)}–${hhmm(it.b)}</span><span class="bn">${esc(it.title)}${it.kind==="task"?` <small>suggested</small>`:""}</span></button>`).join("")}</div>`:`<div class="free">Nothing scheduled.</div>`}
+    ${left.length?`<p class="help" style="font-size:.8rem">${left.length} task${left.length===1?"":"s"} didn't fit in today's free time: ${left.map(x=>esc(x.t.title)).join(", ")}.</p>`:""}</section>`}
+
+/* ---------- habits ---------- */
+function habitData(t){const days=[],T=today();let sch=0,hit=0;
+  const doneOn=new Set((S.log||[]).filter(x=>x.id===t.id).map(x=>x.d));
+  for(let i=27;i>=0;i--){const d=addDays(T,-i);const sc=matches(t,d)||d===t.due;const dn=doneOn.has(d);
+    if(d<T||dn){if(sc||dn)sch+=sc?1:0;if(dn)hit++}if(i<14)days.push({d,sc,dn,today:d===T})}
+  return {days,rate:sch?Math.min(100,Math.round(hit/sch*100)):null}}
+function habitsSection(){const H=S.tasks.filter(t=>t.repeat&&t.repeat.type!=="none");if(!H.length)return "";
+  return `<section class="block"><div class="sechead"><h2>Habits</h2><span class="meta">last 14 days</span></div><div class="rows">${H.map(t=>{const h=habitData(t);
+    return `<div class="habit"><button class="check" data-act="toggle" data-id="${t.id}" aria-label="Done today"></button><div class="hb"><span class="dn">${esc(t.title)}</span>
+      <span class="hdots">${h.days.map(x=>`<i class="${x.dn?"on":x.sc&&!x.today?"miss":x.today?"tod":""}" title="${x.d}"></i>`).join("")}</span>
+      <span class="dk">streak ${t.streak||0} · best ${t.best||t.streak||0}${h.rate!==null?" · "+h.rate+"% kept":""} · ${esc(repeatLabel(t.repeat).toLowerCase())}</span></div></div>`}).join("")}</div></section>`}
+
+/* ---------- trackers: progress bars + countdowns ---------- */
+const durFmt=m=>{m=Math.round(m);if(m<60)return m+"m";const h=Math.floor(m/60),r=m%60;return h+"h"+(r?" "+r+"m":"")};
+function logAdd(t){(S.log=S.log||[]).push({id:t.id,d:today(),m:t.mins||30,cat:t.cat,ex:t.exam||null})}
+function logRemove(t){const L=S.log||[];for(let i=L.length-1;i>=0;i--)if(L[i].id===t.id&&L[i].d===today()){L.splice(i,1);return}}
+function examAt(e){return parse(e.date).getTime()+9*3600e3}
+function nextExam(){const t=today();return S.exams.filter(e=>e.date>=t).sort((a,b)=>a.date<b.date?-1:1)[0]||null}
+function trTarget(tr){const to=tr.to||{kind:"next"};
+  if(to.kind==="custom"){const [d,hm]=(to.at||"").split("T");if(!d)return null;const [h,m]=(hm||"09:00").split(":").map(Number),x=parse(d);x.setHours(h,m,0,0);return {at:x.getTime(),label:to.label||tr.name,date:d}}
+  const e=to.kind==="exam"?examOf(to.id):nextExam();return e?{at:examAt(e),label:e.name,date:e.date,exam:e}:null}
+function trScope(tr){
+  if(tr.type==="count"){const tg=trTarget(tr);if((tr.to||{}).kind!=="custom")return tg&&tg.exam?{kind:"exam",id:tg.exam.id,until:tg.date}:{kind:"none"};
+    return {...(tr.scope||{kind:"none"}),until:tg?tg.date:null}}
+  return tr.scope||{kind:"today"}}
+function matchScope(sc,o){if(sc.kind==="all")return true;if(sc.kind==="cat")return o.cat===sc.id;
+  if(sc.kind==="exam"){const e=examOf(sc.id);if(!e)return false;return (o.exam||o.ex)===sc.id||(!(o.exam||o.ex)&&o.cat===e.cat)}return false}
+function occBetween(t,from,to){let n=0,d=t.due;if(!d)return 1;if(d<from)d=from;if(d>to)return 0;
+  if(!(t.repeat&&t.repeat.type!=="none"))return 1;n=1;let x=d;for(let i=0;i<120;i++){x=nextOcc(t,x);if(!x||x>to)break;n++}return n}
+function trProgress(tr){
+  const sc=trScope(tr),t=today();if(sc.kind==="none")return null;
+  let from,to,inS;
+  if(sc.kind==="today"){from=t;to=t;inS=()=>true}
+  else if(sc.kind==="week"){from=mondayOf(t);to=addDays(from,6);inS=()=>true}
+  else{from=tr.created||t;to=sc.until||addDays(t,0);inS=o=>matchScope(sc,o)}
+  const L=(S.log||[]).filter(x=>x.d>=from&&x.d<=(sc.kind==="today"||sc.kind==="week"?to:"9999")&&inS(x));
+  let done=L.reduce((a,x)=>a+x.m,0),left=0,open=0;
+  S.tasks.filter(x=>!x.done&&inS(x)).forEach(x=>{
+    if(sc.kind==="today"||sc.kind==="week"){if(!x.due||x.due>to)return;const n=occBetween(x,t,to)||(x.due<t?1:0);if(n){left+=n*(x.mins||30);open++}}
+    else{if(x.due&&sc.until&&x.due>sc.until)return;const n=sc.until?Math.max(1,occBetween(x,t,sc.until)):1;left+=n*(x.mins||30);open++}});
+  // topics: reviews in window, or mastery for longer scopes
+  const TW=15;
+  S.topics.filter(inS).forEach(tp=>{
+    if(sc.kind==="today"||sc.kind==="week"){if(tp.last&&tp.last>=from&&tp.last<=to)done+=TW;else if(tp.next<=to){left+=TW;open++}}
+    else{const m=Math.min(1,(tp.interval||0)/21);done+=m*TW*2;left+=(1-m)*TW*2}});
+  const tot=done+left;return {done,left,open,pct:tot?done/tot:1};
+}
+const SCOPE_NAME=sc=>sc.kind==="today"?"Today":sc.kind==="week"?"This week":sc.kind==="all"?"Everything":sc.kind==="cat"?catOf(sc.id).name:sc.kind==="exam"?((examOf(sc.id)||{}).name||"Date"):"";
+function cdText(ms){if(ms<=0)return "now";const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;
+  return (d?d+"d ":"")+pad(h)+":"+pad(m)+":"+pad(x)}
+function trackerCard(tr){
+  if(tr.type==="bar"){const p=trProgress(tr);if(!p)return "";const pc=Math.round(p.pct*100);
+    return `<button class="trk" data-act="editTracker" data-id="${tr.id}"><span class="trh"><span class="trn">${esc(tr.name)}</span><span class="trp">${pc}<small>%</small></span></span>
+      <span class="bar2"><i style="width:${pc}%"></i></span>
+      <span class="trs">${durFmt(p.done)} done · ${durFmt(p.left)} left${p.open?" · "+p.open+" open":""} · ${esc(SCOPE_NAME(trScope(tr)))}</span></button>`}
+  const tg=trTarget(tr);
+  if(!tg)return `<button class="trk" data-act="editTracker" data-id="${tr.id}"><span class="trh"><span class="trn">${esc(tr.name)}</span></span><span class="trs">No upcoming date. Add one in Dates.</span></button>`;
+  const now=Date.now(),ms=tg.at-now,p=trProgress(tr);
+  const start=tr.createdAt||now, tf=Math.min(1,Math.max(0,(now-start)/Math.max(1,tg.at-start)));
+  let pace="";if(p&&ms>0){const days=Math.max(1,Math.ceil(ms/864e5)),need=p.left/days,cap=S.minutesPerDay||180;
+    pace=` · ${durFmt(need)}/day needed · <b>${need<=cap*.5?"comfortable":need<=cap?"on track":"behind"}</b>`}
+  return `<button class="trk cd" data-act="editTracker" data-id="${tr.id}"><span class="trh"><span class="trn">${esc(tr.name)}</span><span class="trl">${esc(tg.label!==tr.name?tg.label:"")}</span></span>
+    <span class="cdn" data-cd="${tg.at}">${cdText(ms)}</span>
+    ${p?`<span class="dual"><span><em>time</em><span class="bar2 thin"><i style="width:${Math.round(tf*100)}%"></i></span></span><span><em>work</em><span class="bar2 thin"><i style="width:${Math.round(p.pct*100)}%"></i></span></span></span>
+    <span class="trs">${durFmt(p.left)} of work left${pace}</span>`:`<span class="trs">${esc(fmt(tg.date))}</span>`}</button>`;
+}
+function trackersSection(){
+  const T=S.trackers||[];
+  return `<section class="block"><div class="sechead"><h2>Progress</h2><button class="btn sm" data-act="addTracker">+ Add</button></div>
+    ${T.length?`<div class="trks">${T.map(trackerCard).join("")}</div>`:`<div class="empty">Add a progress bar or countdown. They update themselves as you add and finish work.</div>`}</section>`;
+}
+setInterval(()=>{if(document.hidden)return;document.querySelectorAll("[data-cd]").forEach(el=>{el.textContent=cdText(Number(el.dataset.cd)-Date.now())})},1000);
+function renderToday(){
+  const open=S.tasks.filter(t=>!t.done&&!(t.repeat&&t.repeat.type!=="none"&&t.due>today()));
+  const budget=S.minutesPerDay||180, plan=planTasks(today()), used=plan.reduce((a,x)=>a+(x.t.mins||30),0);
+  const {slots}=slotsFor(today(),plan); plan.forEach(x=>{x.slot=slots[x.t.id]||null});
   const doneToday=S.tasks.filter(t=>t.done&&t.doneAt===today()).length;
   const rev=dueTopics();
-  view.innerHTML=`<section class="hero" aria-label="last man standing"><q>last man standing</q><img src="${HERO}" alt="" width="553" height="696"></section>${exampleBanner()}${S.blocks.length?`<section class="block"><div class="sechead"><h2>Timetable</h2><button class="btn" style="padding:4px 10px;font-size:.78rem" data-act="go" data-tab="week">Week</button></div>${nowCard()}</section>`:""}${!["on","unavailable","checking"].includes(cal.state)?`<section class="block"><div class="sechead"><h2>Phone reminders</h2></div>${calCard()}</section>`:""}
+  view.innerHTML=`<section class="hero" aria-label="last man standing"><q>last man standing</q><img src="${HERO}" alt="" width="553" height="696"></section>${trackersSection()}${exampleBanner()}${yourDay(plan,slots)}${S.blocks.length?`<section class="block"><div class="sechead"><h2>Timetable</h2><button class="btn" style="padding:4px 10px;font-size:.78rem" data-act="go" data-tab="week">Week</button></div>${nowCard()}</section>`:""}${!["on","unavailable","checking"].includes(cal.state)?`<section class="block"><div class="sechead"><h2>Phone reminders</h2></div>${calCard()}</section>`:""}
   <section class="block"><div class="sechead"><h2>Coming up</h2></div>${countdowns()}</section>
   <section class="block"><div class="sechead"><h2>Your plan for today</h2><span class="meta">${used} / ${budget} min · ${doneToday} done</span></div>
     ${plan.length?`<div class="list">${plan.map(taskRow).join("")}</div>`:`<div class="empty">Nothing planned. Tap + to add a task.</div>`}
@@ -666,8 +845,8 @@ function renderTasks(){
   let list=S.tasks.filter(t=>showDone?true:!t.done);
   if(catFilter!=="all")list=list.filter(t=>t.cat===catFilter);
   const r=ranked(list.filter(t=>!t.done)).concat(list.filter(t=>t.done).map(t=>({t,score:0,why:[]})));
-  const groups=[["Urgent"],["High"],["Medium"],["Low"]];
-  view.innerHTML=`${exampleBanner()}
+  const groups=[["Top"],["Urgent"],["High"],["Medium"],["Low"]];
+  view.innerHTML=`${exampleBanner()}${habitsSection()}
   <div class="filters"><button class="fbtn" data-act="filter" data-cat="all" aria-pressed="${catFilter==="all"}">All</button>
     ${S.cats.map(c=>`<button class="fbtn" style="--c:${catOf(c.id).color}" data-act="filter" data-cat="${c.id}" aria-pressed="${catFilter===c.id}"><span class="dot"></span>${esc(c.name)}</button>`).join("")}</div>
   ${groups.map(([g])=>{const items=r.filter(x=>!x.t.done&&band(x.score)[0]===g);return items.length?`<section class="block"><div class="sechead"><h2>${g}</h2><span class="meta">${items.length}</span></div><div class="list">${items.map(taskRow).join("")}</div></section>`:""}).join("")}
@@ -683,8 +862,8 @@ function renderReviews(){
   <section class="block"><div class="sechead"><h2>Due now</h2><span class="meta">${due.length}</span></div>
     ${due.length?`<div class="list">${due.map(reviewCard).join("")}</div>`:`<div class="empty">All caught up. New topics appear here on their review day.</div>`}</section>
   <section class="block"><div class="sechead"><h2>All topics</h2><span class="meta">${later.length} scheduled</span></div>
-    ${later.length?`<div class="rows">${later.map(tp=>`<div class="drow" style="cursor:default"><span><span class="dn">${esc(tp.name)}</span><span class="dk">${esc(catOf(tp.cat).name)} · next ${esc(rel(tp.next))} · <button class="chip link" data-act="editTopic" data-id="${tp.id}">for: ${esc(examLabel(tp))}</button></span></span><span style="display:flex">${topicTools(tp)}</span></div>`).join("")}</div>`:`<div class="empty">No other topics yet. Tap + Add topic.</div>`}</section>
-  <p class="help">Each topic comes back after 1 day, then about 3, then the gap grows each time you remember it well. "Again" resets it to tomorrow. If a gap would jump past the topic's exam, the review moves to the day before (marked *). Tap "for:" on any topic to change its exam.</p>`;
+    ${later.length?`<div class="rows">${later.map(tp=>`<div class="drow" style="cursor:default"><span><span class="dn">${esc(tp.name)}</span><span class="dk">${esc(catOf(tp.cat).name)} · next ${esc(rel(tp.next))} · <button class="chip link" data-act="editTopic" data-id="${tp.id}">towards: ${esc(examLabel(tp))}</button></span></span><span style="display:flex">${topicTools(tp)}</span></div>`).join("")}</div>`:`<div class="empty">No other topics yet. Tap + Add topic.</div>`}</section>
+  <p class="help">Each topic comes back after 1 day, then about 3, then the gap grows each time you remember it well. "Again" resets it to tomorrow. If a gap would jump past the topic's exam, the review moves to the day before (marked *). Tap "towards:" on any topic to change what it\'s for.</p>`;
 }
 let showPast=false;
 function renderExams(){
@@ -763,107 +942,218 @@ function addMenu(force){
   openSheet(`<h3>Add</h3><div class="seg" id="kind" style="grid-template-columns:repeat(4,1fr)">
     <button data-k="task" aria-pressed="${t==="task"}">Task</button><button data-k="topic" aria-pressed="${t==="topic"}">Topic</button><button data-k="exam" aria-pressed="${t==="exam"}">Date</button><button data-k="block" aria-pressed="${t==="block"}">Timetable</button></div><div id="form"></div>`,
   sh=>{const go=k=>{sh.querySelectorAll("#kind button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));sh.querySelector("#form").innerHTML=formFor(k,null);wireForm(sh,k,null)};
-    sh.querySelectorAll("#kind button").forEach(b=>b.onclick=()=>go(b.dataset.k));go(t)});
+    sh.querySelectorAll("#kind button").forEach(b=>b.onclick=()=>go(b.dataset.k));go(t);if(t==="tracker")sh.querySelector("#kind").hidden=true});
 }
+/* ---------- forms v4: chip pickers ---------- */
+const FL=(t)=>`<span class="fl">${t}</span>`;
+function catPick(sel,edit){
+  return `<div class="pick" data-pick="cat" data-edit="${edit?1:0}">${S.cats.map(c=>`<button type="button" class="pk" data-v="${c.id}" aria-pressed="${c.id===sel}" style="--c:${catOf(c.id).color}"><i></i>${esc(c.name)}${edit?`<b class="px">×</b>`:""}</button>`).join("")}
+    <button type="button" class="pk ghost" data-new>+ New</button><button type="button" class="pk ghost" data-toggle>${edit?"Done":"Edit"}</button>
+    <div class="pnew" hidden><input type="text" placeholder="New category name" aria-label="New category name"><button type="button" class="btn sm" data-save>Add</button></div></div>`;
+}
+function examPick(sel,edit){
+  const t=today(),list=S.exams.filter(e=>e.date>=t||e.id===sel).sort((a,b)=>a.date<b.date?-1:1);
+  return `<div class="pick" data-pick="exam" data-edit="${edit?1:0}"><button type="button" class="pk" data-v="" aria-pressed="${!sel}">Auto</button>${list.map(e=>`<button type="button" class="pk" data-v="${e.id}" aria-pressed="${e.id===sel}">${esc(e.name)} <small>${Math.max(0,diff(t,e.date))}d</small>${edit?`<b class="px">✎</b>`:""}</button>`).join("")}
+    <button type="button" class="pk ghost" data-new>+ New</button>${list.length?`<button type="button" class="pk ghost" data-toggle>${edit?"Done":"Edit"}</button>`:""}
+    <div class="pnew" hidden><input type="text" placeholder="e.g. Chemistry Paper 2" aria-label="Name"><input type="date" aria-label="Date" value="${addDays(t,14)}"><div class="pact"><button type="button" class="btn sm" data-save>Save</button><button type="button" class="btn sm danger" data-del hidden>Delete</button></div></div></div>`;
+}
+const pickVal=(sh,name)=>{const p=sh.querySelector(`[data-pick="${name}"]`);if(!p)return null;const b=p.querySelector(".pk[aria-pressed=true]");return b?b.dataset.v:null};
+function wirePick(sh,p){
+  const name=p.dataset.pick, edit=p.dataset.edit==="1";
+  const redraw=(sel,ed)=>{const html=name==="cat"?catPick(sel,ed):examPick(sel,ed);const tmp=document.createElement("div");tmp.innerHTML=html;const np=tmp.firstElementChild;p.replaceWith(np);wirePick(sh,np)};
+  const cur=()=>{const b=p.querySelector(".pk[aria-pressed=true]");return b?b.dataset.v:(name==="cat"?(S.cats[0]&&S.cats[0].id):"")};
+  const box=p.querySelector(".pnew"), inputs=box.querySelectorAll("input"), del=box.querySelector("[data-del]");
+  let editing=null;
+  p.querySelectorAll(".pk[data-v]").forEach(b=>b.onclick=()=>{
+    if(!edit){p.querySelectorAll(".pk[data-v]").forEach(x=>x.setAttribute("aria-pressed",x===b));return}
+    const id=b.dataset.v;
+    if(name==="cat"){
+      if(!b.dataset.armed){p.querySelectorAll("[data-armed]").forEach(x=>{delete x.dataset.armed});b.dataset.armed=1;b.lastChild.textContent="delete?";return}
+      S.cats=S.cats.filter(c=>c.id!==id);persist();toast("Category deleted");redraw(cur()===id?(S.cats[0]&&S.cats[0].id):cur(),true);return}
+    if(!id)return;
+    const e=examOf(id);editing=id;box.hidden=false;inputs[0].value=e.name;inputs[1].value=e.date;del.hidden=false;inputs[0].focus();
+  });
+  p.querySelector("[data-toggle]")&&(p.querySelector("[data-toggle]").onclick=()=>redraw(cur(),!edit));
+  p.querySelector("[data-new]").onclick=()=>{editing=null;box.hidden=!box.hidden;inputs[0].value="";if(del)del.hidden=true;if(!box.hidden)inputs[0].focus()};
+  box.querySelector("[data-save]").onclick=()=>{const n=inputs[0].value.trim();if(!n){toast("Type a name first");inputs[0].focus();return}
+    if(name==="cat"){const c={id:uid(),name:n,color:PALETTE[S.cats.length%PALETTE.length]};S.cats.push(c);persist();redraw(c.id,false);toast("Category added");return}
+    const date=inputs[1].value||addDays(today(),14);
+    if(editing){const e=examOf(editing);e.name=n;e.date=date;persist();redraw(editing,true);toast("Saved");return}
+    const catSel=pickVal(sh,"cat");const e={id:uid(),name:n,date,cat:catSel||(S.cats[0]&&S.cats[0].id),kind:"exam"};S.exams.push(e);persist();redraw(e.id,false);toast("Added "+n)};
+  if(del)del.onclick=()=>{if(!del.dataset.armed){del.dataset.armed=1;del.textContent="Tap again";return}
+    S.exams=S.exams.filter(e=>e.id!==editing);S.tasks.forEach(t=>{if(t.exam===editing)t.exam=null});S.topics.forEach(t=>{if(t.exam===editing)t.exam=null});
+    persist();redraw(cur()===editing?"":cur(),true);toast("Date deleted")};
+  inputs[0].onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();box.querySelector("[data-save]").click()}};
+}
+const durLabel=m=>m<60?m+"m":(m%60?Math.floor(m/60)+"h"+(m%60):m/60+"h");
+const hhmm=m=>pad(Math.floor(m/60)%24)+":"+pad(m%60);
 function formFor(k,item){
+  if(k==="tracker"){const it=item||{type:"bar",name:"",scope:{kind:"today"},to:{kind:"next"}};
+    const sc=it.scope||{kind:"today"},to=it.to||{kind:"next"};
+    const sOpts=[["today","","Today"],["week","","This week"],["all","","Everything"],...S.cats.map(c=>["cat",c.id,c.name]),...S.exams.filter(e=>e.date>=today()).map(e=>["exam",e.id,e.name])];
+    const isS=(k2,id)=>sc.kind===k2&&(sc.id||"")===id;
+    const tOpts=[["next","","Next date (auto)"],...S.exams.filter(e=>e.date>=today()).sort((a,b)=>a.date<b.date?-1:1).map(e=>["exam",e.id,e.name]),["custom","","Custom"]];
+    const isT=(k2,id)=>to.kind===k2&&(to.id||"")===id;
+    const cAt=(to.at||addDays(today(),30)+"T09:00").split("T");
+    const cs=it.scope&&it.type==="count"?it.scope:{kind:"none"};
+    return `<form id="f" class="list" autocomplete="off">
+    <div class="seg" id="f-tt" style="grid-template-columns:1fr 1fr"><button type="button" data-v="bar" aria-pressed="${it.type==="bar"}">Progress bar</button><button type="button" data-v="count" aria-pressed="${it.type==="count"}">Countdown</button></div>
+    <label class="f">Name<input id="f-title" required value="${esc(it.name||"")}" placeholder="e.g. Chem mock prep, or Summer shred"></label>
+    <div id="w-bar" ${it.type==="bar"?"":"hidden"}>${FL("Tracks")}<div class="pick" id="f-scope">${sOpts.map(([k2,id,l])=>`<button type="button" class="pk" data-k="${k2}" data-v="${k2}|${id}" aria-pressed="${isS(k2,id)}">${esc(l)}</button>`).join("")}</div>
+      <p class="help" style="font-size:.8rem;margin-top:8px">Fills as you finish tasks and reviews in this area, and drops when new work is added.</p></div>
+    <div id="w-count" ${it.type==="count"?"":"hidden"}>${FL("Counts down to")}<div class="pick" id="f-to">${tOpts.map(([k2,id,l])=>`<button type="button" class="pk" data-v="${k2}|${id}" aria-pressed="${isT(k2,id)}">${esc(l)}</button>`).join("")}</div>
+      <div id="w-custom" class="list" style="margin-top:10px" ${to.kind==="custom"?"":"hidden"}>
+        <div class="two"><input type="date" id="f-cd" class="pdate" value="${cAt[0]}" aria-label="Date"><input type="time" id="f-ct" class="pdate" value="${cAt[1]||"09:00"}" aria-label="Time"></div>
+        ${FL("Work that counts towards it")}<div class="pick" id="f-cscope">${[["none","","None"],["all","","Everything"],...S.cats.map(c=>["cat",c.id,c.name])].map(([k2,id,l])=>`<button type="button" class="pk" data-v="${k2}|${id}" aria-pressed="${cs.kind===k2&&(cs.id||"")===id}">${esc(l)}</button>`).join("")}</div></div>
+      <p class="help" style="font-size:.8rem;margin-top:8px">Shows time left, how much work is left before it, and how many minutes a day you need.</p></div>
+    <div class="actions"><button class="btn primary" type="submit">${item?"Save":"Add"}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div>
+    </form>`}
+  const actions=(label)=>`<div class="actions"><button class="btn primary" type="submit">${item?"Save":label}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div>`;
   if(k==="task"){const it=item||{imp:2,mins:30,cat:catFilter!=="all"?catFilter:S.cats[0]&&S.cats[0].id,due:tab==="month"&&selDay>=today()?selDay:""};
+    const t=today(),quick=[["Today",t],["Tomorrow",addDays(t,1)],["In a week",addDays(t,7)],["No date",""]];
     return `<form id="f" class="list" autocomplete="off">
     <label class="f">What do you need to do?<input id="f-title" required value="${esc(it.title||"")}" placeholder="e.g. Make flashcards for organic mechanisms"></label>
-    <div class="two"><label class="f">Category<select id="f-cat">${catOptions(it.cat)}</select></label>
-    <label class="f">Due date (optional)<input id="f-due" type="date" value="${it.due||""}"></label></div>
-    <label class="f">Importance</label><div class="seg" id="f-imp">${[1,2,3].map(i=>`<button type="button" data-v="${i}" aria-pressed="${it.imp===i}">${["","Low","Medium","High"][i]}</button>`).join("")}</div>
-    <div class="two"><label class="f">Time needed (min)<input id="f-mins" type="number" min="5" step="5" inputmode="numeric" value="${it.mins||30}"></label>
-    <label class="f">Linked date / goal<select id="f-exam">${examOptions(it.exam)}</select></label></div>${newExamFields()}
+    ${FL("Category")}${catPick(it.cat,false)}
+    ${FL("Due")}<div class="pick" id="q-due">${quick.map(([l,v])=>`<button type="button" class="pk" data-v="${v}" aria-pressed="${(it.due||"")===v}">${l}</button>`).join("")}<input id="f-due" class="pdate" type="date" value="${it.due||""}" aria-label="Pick a date"></div>
+    ${FL("Importance")}<div class="seg" id="f-imp" style="grid-template-columns:repeat(4,1fr)">${[1,2,3,4].map(i=>`<button type="button" data-v="${i}" aria-pressed="${it.imp===i}">${["","Low","Medium","High","Top"][i]}</button>`).join("")}</div>
+    <p class="help" id="f-slot" style="font-size:.8rem;margin:0"></p>
+    ${FL("Time needed")}<div class="pick" id="f-mins">${[10,20,30,45,60,90,120].map(m=>`<button type="button" class="pk" data-v="${m}" aria-pressed="${(it.mins||30)===m}">${durLabel(m)}</button>`).join("")}</div>
+    ${FL("Working towards")}${examPick(it.exam||"",false)}
     <label class="f">Repeat<select id="f-rep">${[["none","Doesn't repeat"],["daily","Every day"],["days","On certain days"],["every","Every few days"]].map(([v,l])=>`<option value="${v}" ${((it.repeat&&it.repeat.type)||"none")===v?"selected":""}>${l}</option>`).join("")}</select></label>
-    <div class="seg" id="f-days" style="grid-template-columns:repeat(7,1fr)" ${it.repeat&&it.repeat.type==="days"?"":"hidden"}>${[1,2,3,4,5,6,0].map(x=>`<button type="button" data-v="${x}" aria-pressed="${!!(it.repeat&&(it.repeat.days||[]).includes(x))}">${DOW[x].slice(0,2)}</button>`).join("")}</div>
+    <div class="days" id="f-days" ${it.repeat&&it.repeat.type==="days"?"":"hidden"}>${[1,2,3,4,5,6,0].map(x=>`<button type="button" data-v="${x}" aria-pressed="${!!(it.repeat&&(it.repeat.days||[]).includes(x))}">${DOW[x].slice(0,2)}</button>`).join("")}</div>
     <label class="f" id="f-nwrap" ${it.repeat&&it.repeat.type==="every"?"":"hidden"}>Every how many days?<input id="f-n" type="number" min="2" inputmode="numeric" value="${(it.repeat&&it.repeat.n)||2}"></label>
-    <div class="actions"><button class="btn primary" type="submit">${item?"Save":"Add task"}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div>
-    ${item?`<div class="actions"><a class="btn" target="_blank" rel="noopener" href="${esc(gcal(it.title,it.due||today(),"ascension. task · "+catOf(it.cat).name))}">${I.bell} Set phone reminder (Google Calendar)</a></div>`:""}
+    ${actions("Add task")}
+    ${item?`<a class="btn" target="_blank" rel="noopener" href="${esc(gcal(it.title,it.due||today(),"legacy. task · "+catOf(it.cat).name))}">${I.bell} Phone reminder (Google Calendar)</a>`:""}
     </form>`}
   if(k==="block"){const it=item||{cat:S.cats[0]&&S.cats[0].id,days:[parse(tab==="week"?weekDay:today()).getDay()],start:"17:00",end:"18:00"};
+    const sm=toMin(it.start), len=Math.max(15,toMin(it.end)-sm), lens=[15,30,45,60,90,120,180]; if(!lens.includes(len))lens.push(len),lens.sort((a,b)=>a-b);
     return `<form id="f" class="list" autocomplete="off">
-    <label class="f">What's this block for?<input id="f-title" required value="${esc(it.title||"")}" placeholder="e.g. Chemistry revision, or Gym: legs"></label>
-    <label class="f">Category<select id="f-cat">${catOptions(it.cat)}</select></label>
-    <label class="f">Repeats every</label><div class="seg" id="f-bdays" style="grid-template-columns:repeat(7,1fr)">${[1,2,3,4,5,6,0].map(x=>`<button type="button" data-v="${x}" aria-pressed="${it.days.includes(x)}">${DOW[x].slice(0,2)}</button>`).join("")}</div>
-    <div class="two"><label class="f">Starts<input id="f-start" type="time" required value="${it.start}"></label><label class="f">Ends<input id="f-end" type="time" required value="${it.end}"></label></div>
-    <div class="actions"><button class="btn primary" type="submit">${item?"Save":"Add to timetable"}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div>
-    ${item?`<div class="actions"><a class="btn" target="_blank" rel="noopener" href="${esc(gcalBlock(it))}">${I.bell} Remind me weekly (Google Calendar)</a></div><p class="help">Opens Google Calendar with this block already filled in as a weekly repeating event. Tap Save there and your phone will alert you before it starts.</p>`:""}
+    <label class="f">What's it for?<input id="f-title" required value="${esc(it.title||"")}" placeholder="e.g. Chemistry revision, or Gym: legs"></label>
+    ${FL("Category")}${catPick(it.cat,false)}
+    ${FL("Every")}<div class="days" id="f-bdays">${[1,2,3,4,5,6,0].map(x=>`<button type="button" data-v="${x}" aria-pressed="${it.days.includes(x)}">${DOW[x].slice(0,2)}</button>`).join("")}</div>
+    <div class="pick" id="q-days"><button type="button" class="pk ghost" data-set="1,2,3,4,5">Weekdays</button><button type="button" class="pk ghost" data-set="6,0">Weekends</button><button type="button" class="pk ghost" data-set="0,1,2,3,4,5,6">Every day</button></div>
+    ${FL("Starts at")}<div class="two"><select id="f-h" aria-label="Hour">${[...Array(19)].map((_,i)=>i+5).map(h=>`<option value="${h}" ${Math.floor(sm/60)===h?"selected":""}>${pad(h)}</option>`).join("")}</select><select id="f-m" aria-label="Minutes">${[0,15,30,45].map(m=>`<option value="${m}" ${sm%60===m||(sm%60%15&&m===0)?"selected":""}>:${pad(m)}</option>`).join("")}</select></div>
+    ${FL("For")}<div class="pick" id="f-len">${lens.map(m=>`<button type="button" class="pk" data-v="${m}" aria-pressed="${m===len}">${durLabel(m)}</button>`).join("")}</div>
+    <p class="sum" id="f-sum"></p>
+    ${actions("Add to timetable")}
+    ${item?`<a class="btn" target="_blank" rel="noopener" href="${esc(gcalBlock(it))}">${I.bell} Remind me weekly (Google Calendar)</a>`:""}
     </form>`}
   if(k==="topic"){const it=item||{cat:S.cats[0]&&S.cats[0].id};
+    const mine=[...S.topics].sort((a,b)=>a.name.localeCompare(b.name));
     return `<form id="f" class="list" autocomplete="off">
     <label class="f">Topic<input id="f-title" required value="${esc(it.name||"")}" placeholder="e.g. Nucleophilic substitution"></label>
-    <div class="two"><label class="f">Category<select id="f-cat">${catOptions(it.cat)}</select></label>
-    <label class="f">For exam<select id="f-exam">${examOptions(it.exam)}</select></label></div>${newExamFields()}
-    ${item?`<label class="f">Next review<input id="f-next" type="date" value="${it.next}"></label>`:`<p class="help">It will be due for its first review today.</p>`}
-    <div class="actions"><button class="btn primary" type="submit">${item?"Save":"Add topic"}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div></form>`}
+    ${FL("Category")}${catPick(it.cat,false)}
+    ${FL("Working towards")}${examPick(it.exam||"",false)}
+    <p class="help" style="font-size:.8rem">Tap Edit to rename or delete a date, or + New to add one. Auto uses the next date in this category.</p>
+    ${item?`<label class="f">Next review<input id="f-next" type="date" value="${it.next}"></label>`:""}
+    ${actions("Add topic")}
+    </form>
+    ${item?"":`<div class="sechead"><h2>Your topics</h2><span class="meta">${mine.length}</span></div>
+    ${mine.length?`<div class="rows" id="tlist">${mine.map(tp=>`<div class="trow"><span><span class="dn">${esc(tp.name)}</span><span class="dk">${esc(catOf(tp.cat).name)}</span></span><button type="button" class="icn" data-tdel="${tp.id}" aria-label="Delete ${esc(tp.name)}">${I.bin}</button></div>`).join("")}</div>`:`<p class="help">No topics yet.</p>`}`}`}
   const it=item||{kind:"exam",cat:S.cats[0]&&S.cats[0].id,date:addDays(today(),14)};
+  const t=today(),quick=[["1 week",7],["2 weeks",14],["1 month",30],["3 months",91]];
   return `<form id="f" class="list" autocomplete="off">
     <label class="f">Name<input id="f-title" required value="${esc(it.name||"")}" placeholder="e.g. AQA Biology Paper 1, or 100kg bench"></label>
-    <div class="two"><label class="f">Type<select id="f-kind">${Object.keys(KIND).map(k=>`<option value="${k}" ${it.kind===k?"selected":""}>${KIND[k]}</option>`).join("")}</select></label>
-    <label class="f">Date<input id="f-date" type="date" required value="${it.date}"></label></div>
-    <label class="f">Category<select id="f-cat">${catOptions(it.cat)}</select></label>
-    <div class="actions"><button class="btn primary" type="submit">${item?"Save":"Add"}</button>${item?`<button class="btn danger" type="button" id="del">Delete</button>`:""}</div>
-    ${item?`<div class="actions"><a class="btn" target="_blank" rel="noopener" href="${esc(gcal(it.name,it.date,(KIND[it.kind]||"Exam")+" · "+catOf(it.cat).name))}">${I.bell} Add to Google Calendar</a></div>`:""}
+    <div class="seg" id="f-kind" style="grid-template-columns:repeat(4,1fr)">${Object.keys(KIND).map(k=>`<button type="button" data-v="${k}" aria-pressed="${it.kind===k}">${KIND[k]}</button>`).join("")}</div>
+    ${FL("When")}<div class="pick" id="q-date">${quick.map(([l,n])=>`<button type="button" class="pk" data-v="${addDays(t,n)}" aria-pressed="${it.date===addDays(t,n)}">${l}</button>`).join("")}<input id="f-date" class="pdate" type="date" required value="${it.date}" aria-label="Pick a date"></div>
+    <p class="sum" id="f-dsum"></p>
+    ${FL("Category")}${catPick(it.cat,false)}
+    ${actions("Add")}
+    ${item?`<a class="btn" target="_blank" rel="noopener" href="${esc(gcal(it.name,it.date,(KIND[it.kind]||"Exam")+" · "+catOf(it.cat).name))}">${I.bell} Add to Google Calendar</a>`:""}
   </form>`;
 }
 function wireForm(sh,k,item){
   const f=sh.querySelector("#f");
-  const fx=sh.querySelector("#f-exam");
-  if(fx)fx.onchange=()=>{const w=sh.querySelector("#f-newexam");w.hidden=fx.value!=="__new";if(!w.hidden)sh.querySelector("#f-nname").focus()};
-  const examPick=()=>{const v=fx?fx.value:"";if(v!=="__new")return v||null;
-    const n=(sh.querySelector("#f-nname").value||"").trim();if(!n)return undefined;
-    const e={id:uid(),name:n,date:sh.querySelector("#f-ndate").value||addDays(today(),14),cat:val("f-cat"),kind:"exam"};S.exams.push(e);return e.id};
+  sh.querySelectorAll(".pick[data-pick]").forEach(p=>wirePick(sh,p));
+  const single=id=>{const g=sh.querySelector("#"+id);if(g)g.querySelectorAll(".pk").forEach(b=>b.onclick=()=>{g.querySelectorAll(".pk").forEach(x=>x.setAttribute("aria-pressed",x===b));g.dispatchEvent(new Event("pick"))})};
+  ["f-mins","f-len","q-due","q-date","f-scope","f-to","f-cscope"].forEach(single);
+  const tt=sh.querySelector("#f-tt");
+  if(tt){tt.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{sh.querySelector("#w-bar").hidden=b.dataset.v!=="bar";sh.querySelector("#w-count").hidden=b.dataset.v!=="count"}));
+    sh.querySelector("#f-to").addEventListener("pick",()=>{sh.querySelector("#w-custom").hidden=!String(segv("f-to")).startsWith("custom")})}
+  const val=id=>{const el=sh.querySelector("#"+id);return el?el.value.trim():""};
+  const segv=id=>{const b=sh.querySelector("#"+id+" [aria-pressed=true]");return b&&b.dataset.v};
+  sh.querySelectorAll(".seg[id^=f-] button").forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  sh.querySelectorAll(".days button").forEach(b=>b.onclick=()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");sumBlock()});
+  // due / date quick chips <-> date input
+  const link=(qid,iid,after)=>{const q=sh.querySelector("#"+qid),i=sh.querySelector("#"+iid);if(!q||!i)return;
+    q.addEventListener("pick",()=>{i.value=segv(qid)||"";after&&after()});
+    i.oninput=()=>{q.querySelectorAll(".pk").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===i.value));after&&after()}};
+  const dsum=()=>{const o=sh.querySelector("#f-dsum"),v=val("f-date");if(o&&v)o.textContent=fmt(v)+" · "+(diff(today(),v)===0?"today":diff(today(),v)>0?diff(today(),v)+" days away":"in the past")};
+  link("q-due","f-due");link("q-date","f-date",dsum);dsum();
+  const slotEl=sh.querySelector("#f-slot");
+  const slotUpd=()=>{if(!slotEl)return;const d=val("f-due")||today(),m=Number(segv("f-mins")||30);const sl=d<today()?null:suggestSlot(d,m,item&&item.id);
+    slotEl.textContent=sl?"Suggested slot: "+(d===today()?"today":fmt(d))+" "+slotTxt(sl):"No free "+durFmt(m)+" slot "+(d===today()?"left today":"on "+fmt(d))+". Try another day or a shorter time."};
+  if(slotEl){["f-mins","q-due"].forEach(id=>{const g=sh.querySelector("#"+id);g&&g.addEventListener("pick",slotUpd)});const fd=sh.querySelector("#f-due");fd&&fd.addEventListener("input",slotUpd);slotUpd()}
+  // repeat
   const rs=sh.querySelector("#f-rep");
   if(rs)rs.onchange=()=>{sh.querySelector("#f-days").hidden=rs.value!=="days";sh.querySelector("#f-nwrap").hidden=rs.value!=="every"};
-  sh.querySelectorAll("#f-bdays button").forEach(b=>b.onclick=()=>b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true"));
-  sh.querySelectorAll("#f-days button").forEach(b=>b.onclick=()=>b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true"));
-  sh.querySelectorAll(".seg[id^=f-]:not(#f-days):not(#f-bdays) button").forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
-  const val=id=>{const el=sh.querySelector("#"+id);return el?el.value.trim():""};
-  const segv=id=>{const b=sh.querySelector("#"+id+" button[aria-pressed=true]");return b&&b.dataset.v};
+  // block
+  const startMin=()=>Number(val("f-h"))*60+Number(val("f-m"));
+  function sumBlock(){const o=sh.querySelector("#f-sum");if(!o)return;const s0=startMin(),l=Number(segv("f-len")||60);
+    const ds=[...sh.querySelectorAll("#f-bdays [aria-pressed=true]")].map(b=>Number(b.dataset.v));
+    const names=ds.length===7?"Every day":String([1,2,3,4,5,6,0].filter(x=>ds.includes(x)))==="1,2,3,4,5"?"Weekdays":ds.length?[1,2,3,4,5,6,0].filter(x=>ds.includes(x)).map(x=>DOW[x]).join(", "):"No days picked";
+    o.textContent=names+" · "+hhmm(s0)+"–"+hhmm(Math.min(s0+l,24*60-1))}
+  if(sh.querySelector("#f-sum")){["f-h","f-m"].forEach(id=>sh.querySelector("#"+id).onchange=sumBlock);sh.querySelector("#f-len").addEventListener("pick",sumBlock);
+    sh.querySelectorAll("#q-days [data-set]").forEach(b=>b.onclick=()=>{const set=b.dataset.set.split(",").map(Number);sh.querySelectorAll("#f-bdays button").forEach(x=>x.setAttribute("aria-pressed",set.includes(Number(x.dataset.v))));sumBlock()});
+    sumBlock()}
+  // topic list deletes
+  sh.querySelectorAll("[data-tdel]").forEach(b=>b.onclick=()=>{if(!b.classList.contains("armed")){b.classList.add("armed");b.textContent="Delete?";return}
+    S.topics=S.topics.filter(x=>x.id!==b.dataset.tdel);persist();b.closest(".trow").remove();render();toast("Topic deleted")});
   const del=sh.querySelector("#del");
   if(del)del.onclick=()=>{
-    if(del.dataset.armed){const key=k==="task"?"tasks":k==="topic"?"topics":k==="block"?"blocks":"exams";S[key]=S[key].filter(x=>x.id!==item.id);persist();closeSheet();render();toast("Deleted")}
+    if(del.dataset.armed){const key=k==="task"?"tasks":k==="topic"?"topics":k==="block"?"blocks":k==="tracker"?"trackers":"exams";S[key]=S[key].filter(x=>x.id!==item.id);persist();closeSheet();render();toast("Deleted")}
     else{del.dataset.armed=1;del.textContent="Tap again to delete"}
   };
-  f.onsubmit=e=>{e.preventDefault();const title=val("f-title");if(!title)return;
-    let exId=null;if(fx){exId=examPick();if(exId===undefined){toast("Give the new date a name");return}}
-    if(k==="block"){const days=[...sh.querySelectorAll("#f-bdays button[aria-pressed=true]")].map(b=>Number(b.dataset.v));
+  f.onsubmit=e=>{e.preventDefault();const title=val("f-title");if(!title){sh.querySelector("#f-title").focus();return}
+    if(k==="tracker"){const type=segv("f-tt")||"bar",o=item||{id:uid(),created:today(),createdAt:Date.now()};o.type=type;o.name=title;
+      if(type==="bar"){const [k2,id]=String(segv("f-scope")||"today|").split("|");o.scope=id?{kind:k2,id}:{kind:k2}}
+      else{const [k2,id]=String(segv("f-to")||"next|").split("|");
+        if(k2==="custom"){o.to={kind:"custom",at:(val("f-cd")||addDays(today(),30))+"T"+(val("f-ct")||"09:00")};const [c2,cid]=String(segv("f-cscope")||"none|").split("|");o.scope=cid?{kind:c2,id:cid}:{kind:c2}}
+        else{o.to=id?{kind:k2,id}:{kind:k2};o.scope=null}}
+      if(!item){(S.trackers=S.trackers||[]).push(o)}persist();closeSheet();render();toast(item?"Saved":"Added");return}
+    const cat=pickVal(sh,"cat")||(S.cats[0]&&S.cats[0].id), exId=pickVal(sh,"exam")||null;
+    if(k==="block"){const days=[...sh.querySelectorAll("#f-bdays [aria-pressed=true]")].map(b=>Number(b.dataset.v));
       if(!days.length){toast("Pick at least one day");return}
-      const st=val("f-start")||"17:00",en=val("f-end")||st;
-      if(en<=st){toast("End time must be after the start");return}
-      const o=item||{id:uid()};Object.assign(o,{title,cat:val("f-cat"),days,start:st,end:en});if(!item)S.blocks.push(o);
+      const s0=startMin(),en=Math.min(s0+Number(segv("f-len")||60),24*60-1);
+      const o=item||{id:uid()};Object.assign(o,{title,cat,days,start:hhmm(s0),end:hhmm(en)});if(!item)S.blocks.push(o);
       persist();closeSheet();render();toast(item?"Saved":"Added to timetable");return}
     if(k==="task"){const o=item||{id:uid(),done:false,created:today()};
-      Object.assign(o,{title,cat:val("f-cat"),due:val("f-due")||null,imp:Number(segv("f-imp")||2),mins:Number(val("f-mins"))||30,exam:exId});
+      Object.assign(o,{title,cat,due:val("f-due")||null,imp:Number(segv("f-imp")||2),mins:Number(segv("f-mins")||30),exam:exId});
       const rt=val("f-rep")||"none";
       if(rt==="none")o.repeat=null;
-      else{const days=[...sh.querySelectorAll("#f-days button[aria-pressed=true]")].map(b=>Number(b.dataset.v));
+      else{const days=[...sh.querySelectorAll("#f-days [aria-pressed=true]")].map(b=>Number(b.dataset.v));
         o.repeat={type:rt==="days"&&!days.length?"daily":rt,days,n:Math.max(2,Number(val("f-n"))||2)};
         o.anchor=o.due||today(); if(!o.due||!matches(o,o.due))o.due=firstOcc(o,o.due||today()); o.done=false}
       if(!item)S.tasks.push(o)}
     else if(k==="topic"){const o=item||{id:uid(),ease:2.5,interval:0,reps:0,next:today(),hist:[]};
-      Object.assign(o,{name:title,cat:val("f-cat"),exam:exId});if(item&&val("f-next"))o.next=val("f-next");
+      Object.assign(o,{name:title,cat,exam:exId});if(item&&val("f-next"))o.next=val("f-next");
       if(!item)S.topics.push(o)}
-    else{const o=item||{id:uid()};Object.assign(o,{name:title,date:val("f-date"),cat:val("f-cat"),kind:val("f-kind")||"exam"});if(!item)S.exams.push(o)}
+    else{const o=item||{id:uid()};Object.assign(o,{name:title,date:val("f-date")||addDays(today(),14),cat,kind:segv("f-kind")||"exam"});if(!item)S.exams.push(o)}
     persist();closeSheet();render();toast(item?"Saved":"Added");
   };
 }
 function editSheet(k,id){
-  const key=k==="task"?"tasks":k==="topic"?"topics":k==="block"?"blocks":"exams";const it=S[key].find(x=>x.id===id);if(!it)return;
-  openSheet(`<h3>Edit ${k==="block"?"block":k==="exam"?(KIND[it.kind]||"Exam").toLowerCase():k}</h3>${formFor(k,it)}`,sh=>wireForm(sh,k,it));
+  const key=k==="task"?"tasks":k==="topic"?"topics":k==="block"?"blocks":k==="tracker"?"trackers":"exams";const it=(S[key]||[]).find(x=>x.id===id);if(!it)return;
+  openSheet(`<h3>Edit ${k==="tracker"?(it.type==="bar"?"progress bar":"countdown"):k==="block"?"block":k==="exam"?(KIND[it.kind]||"Exam").toLowerCase():k}</h3>${formFor(k,it)}`,sh=>wireForm(sh,k,it));
 }
 function settingsSheet(){
   openSheet(`<h3>Settings</h3>
     <label class="f">Time available per day (minutes)<input id="s-mins" type="number" min="15" step="15" inputmode="numeric" value="${S.minutesPerDay||180}"></label>
+    <div class="two"><label class="f">Day starts<input id="s-ds" type="time" value="${S.dayStart||"07:00"}"></label><label class="f">Day ends<input id="s-de" type="time" value="${S.dayEnd||"22:30"}"></label></div>
     <p class="help">Today's plan fills up to this many minutes with your highest-priority tasks. Anything overdue or due today is always included.</p>
     <div class="sechead"><h2>Categories</h2></div>
     <div class="list" id="cats">${S.cats.map(c=>`<div class="catrow" data-id="${c.id}"><button type="button" class="swatch" style="--c:${catOf(c.id).color}" aria-label="Change shade"></button><input type="text" id="cat-${c.id}" value="${esc(c.name)}" aria-label="Category name"><button type="button" class="more" data-del="${c.id}" aria-label="Remove category">✕</button></div>`).join("")}</div>
     <button type="button" class="btn" id="addCat">+ Add category</button>
     
     <div class="sechead"><h2>Daily reminder on your phone</h2></div>
-    <p class="help">Creates a repeating Google Calendar event so your Pixel pings you to open ascension. every day.</p>
+    <p class="help">Creates a repeating Google Calendar event so your Pixel pings you to open legacy. every day.</p>
     <div class="two"><label class="f">Time<input id="s-time" type="time" value="17:00"></label><div style="display:flex;align-items:flex-end"><a class="btn" id="dailyLink" target="_blank" rel="noopener" href="#">${I.bell} Create reminder</a></div></div>
+    ${STANDALONE?syncSection():""}
+    ${STANDALONE?pushSection():""}
     ${STANDALONE?`<div class="sechead"><h2>Notifications</h2></div><p class="help" id="ntfTxt"></p><div class="actions"><button type="button" class="btn" id="ntfBtn">Turn on notifications</button></div>`:""}
+    ${STANDALONE?`<div class="sechead"><h2>Password</h2></div>
+    <div class="two"><input type="password" id="pwNew" placeholder="new password" aria-label="New password" style="border:1px solid var(--line-hi);background:var(--sunk);color:var(--fg);padding:11px 12px;border-radius:0;min-width:0"><button type="button" class="btn" id="pwSave">Change password</button></div>
+    <div class="actions"><button type="button" class="btn sm" id="pwLock">Lock now</button></div>`:""}
     <div class="sechead"><h2>Your data</h2></div>
     <p class="help">${STANDALONE?"Your data lives only on this phone. Download a backup now and then.":"Moving to the offline app? Tap Copy my data, then paste it into Import in the offline app's settings."}</p>
     <div class="actions"><button type="button" class="btn" id="expCopy">Copy my data</button>${STANDALONE?`<button type="button" class="btn" id="expFile">Download backup</button>`:""}</div>
@@ -871,9 +1161,9 @@ function settingsSheet(){
     <div class="actions"><button type="button" class="btn" id="impBtn">Import</button>${STANDALONE?`<button type="button" class="btn" id="undoUpd" hidden>Undo last update</button>`:""}</div>
     <p class="help" style="font-size:.8rem">Data you paste replaces what's in the app. An update code changes the app itself and leaves your data alone.</p>
     <div class="actions"><button class="btn primary" id="saveSet">Save</button></div>
-    <p class="note"><span class="led ${syncState==="cloud"?"on":""}"></span><span id="syncTxt">${syncState==="cloud"?"Saved to your Claude account":"Saved on this device"} · version 3</span></p>`,
+    <p class="note"><span class="led ${syncState==="cloud"?"on":""}"></span><span id="syncTxt">${syncState==="cloud"?"Saved to your Claude account":"Saved on this device"} · version 11</span></p>`,
   sh=>{
-    const upd=()=>{sh.querySelector("#dailyLink").href=gcal("ascension.: check today's plan",today(),"Open ascension. and work through today's plan and reviews.",sh.querySelector("#s-time").value||"17:00","RRULE:FREQ=DAILY")};
+    const upd=()=>{sh.querySelector("#dailyLink").href=gcal("legacy.: check today's plan",today(),"Open legacy. and work through today's plan and reviews.",sh.querySelector("#s-time").value||"17:00","RRULE:FREQ=DAILY")};
     sh.querySelector("#s-time").oninput=upd;upd();
     sh.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{const c=S.cats.find(x=>x.id===b.parentElement.dataset.id);c.color=PALETTE[(PALETTE.indexOf(c.color)+1)%PALETTE.length];b.style.setProperty("--c",c.color)});
     sh.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{const id=b.dataset.del;const used=S.tasks.some(t=>t.cat===id)||S.topics.some(t=>t.cat===id)||S.exams.some(t=>t.cat===id);
@@ -890,15 +1180,21 @@ function settingsSheet(){
     ib.onclick=()=>{const raw=sh.querySelector("#impTxt").value.trim();
       if(raw.startsWith("ASCENSION-UPDATE:")){if(!STANDALONE){toast("Paste update codes into the installed app, not here.");return}installUpdate(raw,ib);return}
       let o;try{o=JSON.parse(raw)}catch(e){toast("That isn't valid data. Copy it again and paste the whole thing.");return}
-      if(!o||!Array.isArray(o.tasks)||!Array.isArray(o.cats)){toast("That isn't ascension. data.");return}
+      if(!o||!Array.isArray(o.tasks)||!Array.isArray(o.cats)){toast("That isn't legacy. data.");return}
       if(!ib.dataset.armed){ib.dataset.armed=1;ib.textContent="Tap again to replace everything";return}
-      if(!o.blocks)o.blocks=[];S=migrate(o);persist();closeSheet();render();toast("Imported")};
+      if(!o.blocks)o.blocks=[];S=migrate(o);S._ids=null;persist();closeSheet();render();toast("Imported")};
     if(STANDALONE&&window.ascNotify)window.ascNotify.wire(sh);
+    if(STANDALONE){wirePush(sh);wireSync(sh)}
+    const ps=sh.querySelector("#pwSave");
+    if(ps)ps.onclick=async()=>{const v=sh.querySelector("#pwNew").value.trim().toLowerCase();if(v.length<3){toast("Use at least 3 characters");return}
+      try{localStorage.setItem("legacy.pw",await pwHash(v));sh.querySelector("#pwNew").value="";toast("Password changed")}catch(e){toast("Couldn't save the password")}};
+    const pl=sh.querySelector("#pwLock");if(pl)pl.onclick=()=>{closeSheet();try{sessionStorage.removeItem("legacy.open")}catch(e){}showLock()};
     const uu=sh.querySelector("#undoUpd");
     if(uu&&"caches" in window)caches.has("ascension-override").then(h=>{uu.hidden=!h});
     if(uu)uu.onclick=async()=>{if(!uu.dataset.armed){uu.dataset.armed=1;uu.textContent="Tap again to undo";return}
       await caches.delete("ascension-override");toast("Going back to the installed version");setTimeout(()=>location.reload(),700)};
     sh.querySelector("#saveSet").onclick=()=>{S.minutesPerDay=Math.max(15,Number(sh.querySelector("#s-mins").value)||180);
+      const ds=sh.querySelector("#s-ds").value,de=sh.querySelector("#s-de").value;if(ds&&de&&de>ds){S.dayStart=ds;S.dayEnd=de}
       S.cats.forEach(c=>{const el=sh.querySelector("#cat-"+CSS.escape(c.id));if(el&&el.value.trim())c.name=el.value.trim()});
       persist();closeSheet();render();toast("Settings saved")};
   });
@@ -909,12 +1205,155 @@ async function installUpdate(raw,btn){
     const parts=raw.replace(/\s+/g,"").split(":"), ver=parts[1], b64=parts.slice(2).join("");
     const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
     const html=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
-    if(!/^<!doctype html>/i.test(html)||html.indexOf("ascension.")<0||html.indexOf('const STANDALONE=true')<0){toast("That update code is damaged. Copy it again.");return}
+    if(!/^<!doctype html>/i.test(html)||(html.indexOf("legacy.")<0&&html.indexOf("ascension.")<0)||html.indexOf('const STANDALONE=true')<0){toast("That update code is damaged. Copy it again.");return}
     const c=await caches.open("ascension-override");
     await c.put("./index.html",new Response(html,{headers:{"Content-Type":"text/html; charset=utf-8"}}));
     if(btn)btn.textContent="Updated";
     toast("Updating to version "+ver+"…");setTimeout(()=>location.reload(),900);
   }catch(e){toast("That update code didn't work. Copy the whole code and try again.")}
+}
+/* ---------- lock-screen alerts via ntfy ---------- */
+const NTFY="https://ntfy.sh/";
+const appURL=()=>location.href.split("#")[0].split("?")[0].replace(/index\.html$/,"");
+const iconURL=()=>appURL()+"icon-192.png";
+function pushCfg(){if(!S.push)S.push={on:false,topic:"legacy-"+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,8),lead:10,brief:"07:30",exams:true};return S.push}
+var pushSent={};try{pushSent=JSON.parse(localStorage.getItem("legacy.pushsent")||"{}")}catch(e){}
+const savePushSent=()=>{try{localStorage.setItem("legacy.pushsent",JSON.stringify(pushSent))}catch(e){}};
+var bannersOK=null;
+async function hasBanners(){if(bannersOK!==null)return bannersOK;try{const r=await fetch(appURL()+"banner-now.jpg",{method:"HEAD",cache:"no-store"});bannersOK=r.ok}catch(e){bannersOK=false}return bannersOK}
+async function ntfySend(topic,title,message,at,o){o=o||{};
+  const q=new URLSearchParams({title,icon:iconURL(),click:appURL(),priority:String(o.priority||3),actions:"view, open legacy., "+appURL()});
+  if(at)q.set("delay",String(at));
+  if(o.banner&&await hasBanners())q.set("attach",appURL()+"banner-"+o.banner+".jpg");
+  const url=NTFY+encodeURIComponent(topic)+"?"+q.toString();
+  try{const r=await fetch(url,{method:"POST",body:message});return r.ok}
+  catch(e){try{await fetch(url,{method:"POST",body:message,mode:"no-cors"});return true}catch(_){return false}}
+}
+const atUnix=(d,hm)=>{const [y,m,dd]=d.split("-").map(Number),[h,mi]=hm.split(":").map(Number);return Math.floor(new Date(y,m-1,dd,h,mi).getTime()/1000)};
+function pushEvents(){
+  const c=pushCfg(),t=today(),ev=[];
+  for(let i=0;i<=2;i++){const d=addDays(t,i);
+    blocksOn(d).forEach(b=>{const at=atUnix(d,b.start)-c.lead*60;ev.push({key:"b|"+b.id+"|"+d+"|"+b.start+"|"+b.title+"|"+c.lead,at,title:b.title.toLowerCase()+" — "+b.start,msg:"starts in "+c.lead+" min · until "+b.end,o:{banner:"now",priority:4}})});
+    if(c.brief&&c.brief!=="off"){const bl=blocksOn(d),tk=tasksOn(d).length,rv=S.topics.filter(x=>x.next<=d).length,first=bl[0];
+      const day=parse(d).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}).toLowerCase();
+      ev.push({key:"m|"+d+"|"+c.brief,at:atUnix(d,c.brief),title:"today — "+day,msg:(bl.length?bl.length+" block"+(bl.length===1?"":"s")+(first?" · first: "+first.title.toLowerCase()+" "+first.start:""):"nothing timetabled")+"\n"+tk+" task"+(tk===1?"":"s")+" due · "+rv+" review"+(rv===1?"":"s"),o:{banner:"today",priority:3}})}
+    if(c.exams)S.exams.filter(e=>e.date===addDays(d,1)).forEach(e=>ev.push({key:"x|"+e.id+"|"+e.date,at:atUnix(d,"18:00"),title:"tomorrow — "+e.name.toLowerCase(),msg:(KIND[e.kind]||"Exam").toLowerCase()+" · rest well. you've done the work.",o:{banner:"tomorrow",priority:4}}));
+  }
+  return ev;
+}
+var pushBusy=false,pushTimer=null;
+async function schedulePush(){
+  const c=pushCfg();if(!STANDALONE||!c.on||pushBusy||!navigator.onLine)return;
+  pushBusy=true;const now=Date.now()/1000;
+  try{for(const e of pushEvents()){if(e.at<now+20||e.at>now+2.9*86400||pushSent[e.key])continue;
+      if(await ntfySend(c.topic,e.title,e.msg,e.at,e.o)){pushSent[e.key]=e.at;savePushSent()}}
+    for(const k in pushSent)if(pushSent[k]<now-86400)delete pushSent[k];savePushSent();
+  }finally{pushBusy=false}
+}
+function queuePush(){clearTimeout(pushTimer);pushTimer=setTimeout(schedulePush,4000)}
+function pushSection(){const c=pushCfg();
+  return `<div class="sechead"><h2>Lock-screen alerts</h2></div>
+    <p class="help" id="pushTxt">${c.on?"On. Alerts are queued up to 2 days ahead, so open legacy. at least every couple of days.":"Get alerts on your lock screen, with the Atlas icon, even when legacy. is closed."}</p>
+    <ol class="help" style="padding-left:1.2em;margin:0;display:flex;flex-direction:column;gap:4px">
+      <li>Install <b>ntfy</b> from the Play Store (free, no account).</li>
+      <li>In ntfy tap <b>+</b>, paste the name below, leave the server as ntfy.sh, tap <b>Subscribe</b>.</li>
+      <li>Come back here, turn alerts on and send a test.</li></ol>
+    <div class="catrow"><input type="text" id="pushTopic" readonly value="${esc(c.topic)}" aria-label="Your private alert name"><button type="button" class="btn sm" id="pushCopy">Copy</button></div>
+    <div class="two"><label class="f">Alert before blocks<select id="pushLead">${[5,10,15,30].map(m=>`<option value="${m}" ${c.lead===m?"selected":""}>${m} min</option>`).join("")}</select></label>
+      <label class="f">Morning summary<select id="pushBrief">${["off","06:30","07:00","07:30","08:00","08:30"].map(v=>`<option value="${v}" ${c.brief===v?"selected":""}>${v==="off"?"Off":v}</option>`).join("")}</select></label></div>
+    <label class="f" style="flex-direction:row;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-family:var(--f-body);font-size:.9rem;color:var(--fg)"><input type="checkbox" id="pushExams" ${c.exams?"checked":""} style="width:auto"> Remind me the evening before exams and deadlines</label>
+    <div class="actions"><button type="button" class="btn" id="pushOn">${c.on?"Turn alerts off":"Turn alerts on"}</button><button type="button" class="btn" id="pushTest">Send test</button></div>
+    <p class="help" style="font-size:.8rem">Alerts pass through the free ntfy.sh service. Your alert name is random, so only someone who has it can see them.</p>`}
+function wirePush(sh){
+  const c=pushCfg(),txt=sh.querySelector("#pushTxt");if(!txt)return;
+  sh.querySelector("#pushCopy").onclick=()=>{const i=sh.querySelector("#pushTopic");try{navigator.clipboard.writeText(c.topic).then(()=>toast("Copied. Paste it into ntfy."),()=>{i.select()})}catch(e){i.select()}};
+  const save=()=>{c.lead=Number(sh.querySelector("#pushLead").value);c.brief=sh.querySelector("#pushBrief").value;c.exams=sh.querySelector("#pushExams").checked;persist()};
+  ["#pushLead","#pushBrief","#pushExams"].forEach(q=>sh.querySelector(q).onchange=save);
+  sh.querySelector("#pushOn").onclick=e=>{save();c.on=!c.on;persist();e.target.textContent=c.on?"Turn alerts off":"Turn alerts on";
+    txt.textContent=c.on?"On. Alerts are queued up to 2 days ahead, so open legacy. at least every couple of days.":"Off.";if(c.on)schedulePush().then(()=>toast("Alerts queued"))};
+  sh.querySelector("#pushTest").onclick=async()=>{const nx=pushEvents().filter(x=>x.o&&x.o.banner==="now"&&x.at>Date.now()/1000).sort((a,b)=>a.at-b.at)[0];
+    const ok=await ntfySend(c.topic,nx?nx.title:"legacy. — test",nx?nx.msg:"this is how your alerts will look.",0,{banner:"now",priority:4});toast(ok?"Test sent. Check your phone.":"Couldn't reach ntfy. Check your connection.")};
+}
+/* ---------- password lock ---------- */
+const PW_DEFAULT="685c10e25fa7f4dc4d78494520d761a9c7808cf82970d23207f3c6a0db2be1b5";
+async function pwHash(pw){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("legacy.|"+pw));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const pwStored=()=>{try{return localStorage.getItem("legacy.pw")||PW_DEFAULT}catch(e){return PW_DEFAULT}};
+var hiddenAt=0;
+function showLock(){const L=document.getElementById("lock");if(!L)return;L.hidden=false;document.body.style.overflow="hidden";const i=document.getElementById("lockPw");i.value="";document.getElementById("lockErr").textContent="";setTimeout(()=>i.focus(),60)}
+function hideLock(){document.getElementById("lock").hidden=true;document.body.style.overflow="";try{sessionStorage.setItem("legacy.open","1")}catch(e){}}
+function initLock(){
+  if(!STANDALONE)return;
+  let open=false;try{open=sessionStorage.getItem("legacy.open")==="1"}catch(e){}
+  if(open)hideLock();else showLock();
+  document.getElementById("lockForm").onsubmit=async e=>{e.preventDefault();const f=e.target,i=document.getElementById("lockPw");
+    let ok=false;try{ok=(await pwHash(i.value.trim().toLowerCase()))===pwStored()}catch(_){ok=i.value.trim().toLowerCase()==="lms"&&pwStored()===PW_DEFAULT}
+    if(ok){hideLock();render()}else{document.getElementById("lockErr").textContent="wrong password";f.classList.remove("shake");void f.offsetWidth;f.classList.add("shake");i.select()}};
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)hiddenAt=Date.now();else if(hiddenAt&&Date.now()-hiddenAt>60000){try{sessionStorage.removeItem("legacy.open")}catch(e){}showLock()}});
+}
+/* ---------- sync between devices via a private GitHub repo ---------- */
+const SYNC_COLS=["tasks","topics","exams","blocks","trackers","cats"];
+function syncCfg(){try{return JSON.parse(localStorage.getItem("legacy.sync")||"null")}catch(e){return null}}
+function setSyncCfg(c){try{c?localStorage.setItem("legacy.sync",JSON.stringify(c)):localStorage.removeItem("legacy.sync")}catch(e){}}
+function trackDeletes(){S.del=S.del||{};const now=Date.now(),cur=new Set();SYNC_COLS.forEach(k=>(S[k]||[]).forEach(x=>cur.add(x.id)));
+  (S._ids||[]).forEach(id=>{if(!cur.has(id))S.del[id]=now});S._ids=[...cur];
+  for(const id in S.del)if(now-S.del[id]>90*864e5)delete S.del[id]}
+function mergeStates(a,b){
+  const newer=(a.updated||0)>=(b.updated||0)?a:b, older=newer===a?b:a;
+  const out=JSON.parse(JSON.stringify(newer)), del=Object.assign({},older.del||{},newer.del||{});out.del=del;
+  SYNC_COLS.forEach(k=>{const m=new Map();(older[k]||[]).forEach(x=>m.set(x.id,x));(newer[k]||[]).forEach(x=>m.set(x.id,x));out[k]=[...m.values()].filter(x=>!del[x.id])});
+  const lk=new Map();[...(older.log||[]),...(newer.log||[])].forEach(x=>lk.set(x.id+"|"+x.d+"|"+x.m,x));out.log=[...lk.values()];
+  out.updated=Math.max(a.updated||0,b.updated||0);out._ids=[];SYNC_COLS.forEach(k=>out[k].forEach(x=>out._ids.push(x.id)));
+  return out}
+const b64e=s=>btoa(unescape(encodeURIComponent(s))), b64d=s=>decodeURIComponent(escape(atob(s.replace(/\s/g,""))));
+async function ghFile(c,method,body){
+  const r=await fetch("https://api.github.com/repos/"+encodeURIComponent(c.owner)+"/"+encodeURIComponent(c.repo)+"/contents/legacy-data.json"+(method==="GET"?"?t="+Date.now():""),
+    {method,cache:"no-store",headers:{Authorization:"Bearer "+c.token,Accept:"application/vnd.github+json"},body:body?JSON.stringify(body):undefined});
+  return r}
+var syncBusy=false,syncTimer=null,syncMsg="";
+function syncStatus(m){syncMsg=m;const el=document.getElementById("syncState");if(el)el.textContent=m}
+async function syncNow(mode){const c=syncCfg();if(!c||!c.token||syncBusy)return;if(!navigator.onLine){syncStatus("Offline. Will sync when you're back online.");return}
+  syncBusy=true;syncStatus("Syncing…");
+  try{
+    let r=await ghFile(c,"GET");
+    if(r.status===401||r.status===403){syncStatus("GitHub refused the key. Check it in Settings › Sync.");return}
+    if(r.status===404&&!c.sha){ // nothing uploaded yet, or wrong repo
+      const chk=await fetch("https://api.github.com/repos/"+encodeURIComponent(c.owner)+"/"+encodeURIComponent(c.repo),{headers:{Authorization:"Bearer "+c.token},cache:"no-store"});
+      if(!chk.ok){syncStatus("Can't find the repository "+c.owner+"/"+c.repo+".");return}
+    }
+    let sha=null,remote=null;
+    if(r.ok){const j=await r.json();sha=j.sha;remote=JSON.parse(b64d(j.content))}
+    if(remote){
+      const before=JSON.stringify(S);
+      S=migrate(mode==="adopt"?remote:mergeStates(S,remote));if(mode==="adopt")S._ids=null;
+      if(!S._ids){S._ids=[];SYNC_COLS.forEach(k=>(S[k]||[]).forEach(x=>S._ids.push(x.id)))}
+      saveLocal();if(JSON.stringify(S)!==before&&!document.getElementById("sheetHost").innerHTML)render();
+      if(JSON.stringify(S)===JSON.stringify(remote)&&!c.dirty){c.sha=sha;c.last=Date.now();setSyncCfg(c);syncStatus("Synced "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));return}
+    }
+    const put=await ghFile(c,"PUT",{message:"legacy. sync "+new Date().toISOString(),content:b64e(JSON.stringify(S)),...(sha?{sha}:{})});
+    if(put.status===409||put.status===422){c.dirty=true;setSyncCfg(c);setTimeout(()=>syncNow(),800);syncStatus("Merging changes…");return}
+    if(!put.ok){syncStatus("Couldn't save to GitHub ("+put.status+").");return}
+    const pj=await put.json();c.sha=pj.content&&pj.content.sha;c.dirty=false;c.last=Date.now();setSyncCfg(c);
+    syncStatus("Synced "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));
+  }catch(e){syncStatus("Couldn't reach GitHub. Will try again.")}
+  finally{syncBusy=false}}
+function queueSync(){const c=syncCfg();if(!c)return;c.dirty=true;setSyncCfg(c);clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(),3000)}
+function syncSection(){const c=syncCfg();
+  return `<div class="sechead"><h2>Sync</h2></div>
+    <p class="help">${c?"Connected to <b>"+esc(c.owner)+"/"+esc(c.repo)+"</b>. Changes sync automatically whenever you're online.":"Keep your phone and Mac in step through a private GitHub repository only you can see."}</p>
+    ${c?"":`<label class="f">GitHub username<input id="syO" value="blawg123" autocapitalize="off" spellcheck="false"></label>
+    <label class="f">Private repository<input id="syR" value="legacy-data" autocapitalize="off" spellcheck="false"></label>
+    <label class="f">Access key (token)<input id="syT" type="password" placeholder="github_pat_…" autocapitalize="off" spellcheck="false"></label>`}
+    <div class="actions">${c?`<button type="button" class="btn" id="sySync">Sync now</button><button type="button" class="btn" id="syOff">Disconnect</button>`:`<button type="button" class="btn" id="syOn">Connect</button>`}</div>
+    <p class="note"><span class="led ${c?"on":""}"></span><span id="syncState">${esc(syncMsg||(c&&c.last?"Last synced "+new Date(c.last).toLocaleString("en-GB",{weekday:"short",hour:"2-digit",minute:"2-digit"}):c?"Not synced yet":"Not connected"))}</span></p>`}
+function wireSync(sh){
+  const on=sh.querySelector("#syOn");
+  if(on)on.onclick=async()=>{const owner=sh.querySelector("#syO").value.trim(),repo=sh.querySelector("#syR").value.trim(),token=sh.querySelector("#syT").value.trim();
+    if(!owner||!repo||!token){toast("Fill in all three boxes");return}
+    const c={owner,repo,token,sha:null,dirty:false};setSyncCfg(c);on.textContent="Connecting…";
+    let has=false;try{const r=await ghFile(c,"GET");if(r.status===401||r.status===403){setSyncCfg(null);on.textContent="Connect";toast("GitHub refused that key");return}has=r.ok}catch(e){}
+    await syncNow(has?"adopt":undefined);settingsSheet();toast(has?"Connected. Loaded your data from your other device.":"Connected. Your data is now saved to GitHub.")};
+  const sn=sh.querySelector("#sySync");if(sn)sn.onclick=()=>syncNow();
+  const off=sh.querySelector("#syOff");if(off)off.onclick=()=>{if(!off.dataset.armed){off.dataset.armed=1;off.textContent="Tap again";return}setSyncCfg(null);syncMsg="";settingsSheet();toast("Disconnected. Your data stays on this device.")};
 }
 function renderNote(){const t=document.getElementById("syncTxt");if(t)t.textContent=syncState==="cloud"?"Saved to your Claude account":"Saved on this device"}
 
@@ -922,8 +1361,8 @@ function renderNote(){const t=document.getElementById("syncTxt");if(t)t.textCont
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;
   if(a==="toggle"){const t=S.tasks.find(x=>x.id===id);
-    if(t.repeat&&t.repeat.type!=="none"&&!t.done){const nx=completeRoutine(t);persist();render();toast("Streak "+t.streak+". Next: "+(nx?fmt(nx):"none"))}
-    else{t.done=!t.done;t.doneAt=t.done?today():null;persist();render();if(t.done)toast("Done.")}}
+    if(t.repeat&&t.repeat.type!=="none"&&!t.done){logAdd(t);const nx=completeRoutine(t);persist();render();toast("Streak "+t.streak+". Next: "+(nx?fmt(nx):"none"))}
+    else{t.done=!t.done;t.doneAt=t.done?today():null;if(t.done)logAdd(t);else logRemove(t);persist();render();if(t.done)toast("Done.")}}
   else if(a==="editTask")editSheet("task",id);
   else if(a==="editTopic")editSheet("topic",id);
   else if(a==="editExam")editSheet("exam",id);
@@ -931,6 +1370,8 @@ document.addEventListener("click",e=>{
   else if(a==="pickDay"){selDay=b.dataset.day;if(selDay.slice(0,7)!==monthCur.slice(0,7))monthCur=selDay.slice(0,7)+"-01";render()}
   else if(a==="month"){const d=Number(b.dataset.d);if(d===0){monthCur=today().slice(0,7)+"-01";selDay=today()}else{const x=parse(monthCur);x.setMonth(x.getMonth()+d);monthCur=ymd(x)}render()}
   else if(a==="allowCal")allowCal();
+  else if(a==="addTracker")addMenu("tracker");
+  else if(a==="editTracker")editSheet("tracker",id);
   else if(a==="addTopic")addMenu("topic");
   else if(a==="addDate")addMenu("exam");
   else if(a==="addBlock"){weekDay=b.dataset.day;addMenu("block")}
@@ -955,6 +1396,8 @@ let tt;function toast(m){const h=document.getElementById("toastHost");h.innerHTM
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)render()});
 
 render();
+initLock();
+if(STANDALONE){setTimeout(schedulePush,2500);setTimeout(()=>syncNow(),1200);addEventListener("online",()=>{schedulePush();syncNow()});document.addEventListener("visibilitychange",()=>{if(!document.hidden){schedulePush();syncNow()}})}
 setInterval(()=>{if((tab==="today"||tab==="week")&&!document.getElementById("sheetHost").innerHTML)render()},60000);
 })();
 </script>
