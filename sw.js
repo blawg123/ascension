@@ -1,16 +1,16 @@
-/* ascension. version 2 */
-const CACHE="ascension-v2";
+/* ascension. version 3 */
+const CACHE="ascension-v3";
 const CORE=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./icon-maskable-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE&&x!=="ascension-override"&&x!=="ascension-fonts").map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{
   const req=e.request; if(req.method!=="GET")return;
   const url=new URL(req.url);
   if(url.origin===location.origin){
     if(req.mode==="navigate"||url.pathname.endsWith("/index.html")){
-      // the app page: get the newest version when online, use the saved copy offline
-      e.respondWith(fetch(req,{cache:"no-store"}).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(x=>x.put("./index.html",c))}return r})
-        .catch(()=>caches.match("./index.html")));
+      // an update pasted into the app wins; otherwise newest online copy, saved copy offline
+      e.respondWith(caches.open("ascension-override").then(c=>c.match("./index.html")).then(o=>o||fetch(req,{cache:"no-store"}).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(x=>x.put("./index.html",c))}return r})
+        .catch(()=>caches.match("./index.html"))));
       return;
     }
     e.respondWith(caches.match(req,{ignoreSearch:true}).then(hit=>hit||fetch(req).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(x=>x.put(req,c))}return r})));

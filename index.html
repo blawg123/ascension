@@ -373,6 +373,7 @@ function seed(){
   };
 }
 const STANDALONE=true;
+const APP_VERSION="3";
 let S=null, LS_KEY="studydesk.v1";
 function loadLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){return null}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
@@ -866,10 +867,11 @@ function settingsSheet(){
     <div class="sechead"><h2>Your data</h2></div>
     <p class="help">${STANDALONE?"Your data lives only on this phone. Download a backup now and then.":"Moving to the offline app? Tap Copy my data, then paste it into Import in the offline app's settings."}</p>
     <div class="actions"><button type="button" class="btn" id="expCopy">Copy my data</button>${STANDALONE?`<button type="button" class="btn" id="expFile">Download backup</button>`:""}</div>
-    <label class="f">Paste data to import<textarea id="impTxt" rows="3" placeholder="Paste copied data here"></textarea></label>
-    <div class="actions"><button type="button" class="btn" id="impBtn">Import (replaces current data)</button></div>
+    <label class="f">Paste data or an update code<textarea id="impTxt" rows="3" placeholder="Paste copied data here"></textarea></label>
+    <div class="actions"><button type="button" class="btn" id="impBtn">Import</button>${STANDALONE?`<button type="button" class="btn" id="undoUpd" hidden>Undo last update</button>`:""}</div>
+    <p class="help" style="font-size:.8rem">Data you paste replaces what's in the app. An update code changes the app itself and leaves your data alone.</p>
     <div class="actions"><button class="btn primary" id="saveSet">Save</button></div>
-    <p class="note"><span class="led ${syncState==="cloud"?"on":""}"></span><span id="syncTxt">${syncState==="cloud"?"Saved to your Claude account":"Saved on this device"} · version 2</span></p>`,
+    <p class="note"><span class="led ${syncState==="cloud"?"on":""}"></span><span id="syncTxt">${syncState==="cloud"?"Saved to your Claude account":"Saved on this device"} · version 3</span></p>`,
   sh=>{
     const upd=()=>{sh.querySelector("#dailyLink").href=gcal("ascension.: check today's plan",today(),"Open ascension. and work through today's plan and reviews.",sh.querySelector("#s-time").value||"17:00","RRULE:FREQ=DAILY")};
     sh.querySelector("#s-time").oninput=upd;upd();
@@ -885,15 +887,34 @@ function settingsSheet(){
     const ef=sh.querySelector("#expFile");
     if(ef)ef.onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json()],{type:"application/json"}));a.download="ascension-backup-"+today()+".json";document.body.appendChild(a);a.click();a.remove()};
     const ib=sh.querySelector("#impBtn");
-    ib.onclick=()=>{let o;try{o=JSON.parse(sh.querySelector("#impTxt").value.trim())}catch(e){toast("That isn't valid data. Copy it again and paste the whole thing.");return}
+    ib.onclick=()=>{const raw=sh.querySelector("#impTxt").value.trim();
+      if(raw.startsWith("ASCENSION-UPDATE:")){if(!STANDALONE){toast("Paste update codes into the installed app, not here.");return}installUpdate(raw,ib);return}
+      let o;try{o=JSON.parse(raw)}catch(e){toast("That isn't valid data. Copy it again and paste the whole thing.");return}
       if(!o||!Array.isArray(o.tasks)||!Array.isArray(o.cats)){toast("That isn't ascension. data.");return}
       if(!ib.dataset.armed){ib.dataset.armed=1;ib.textContent="Tap again to replace everything";return}
       if(!o.blocks)o.blocks=[];S=migrate(o);persist();closeSheet();render();toast("Imported")};
     if(STANDALONE&&window.ascNotify)window.ascNotify.wire(sh);
+    const uu=sh.querySelector("#undoUpd");
+    if(uu&&"caches" in window)caches.has("ascension-override").then(h=>{uu.hidden=!h});
+    if(uu)uu.onclick=async()=>{if(!uu.dataset.armed){uu.dataset.armed=1;uu.textContent="Tap again to undo";return}
+      await caches.delete("ascension-override");toast("Going back to the installed version");setTimeout(()=>location.reload(),700)};
     sh.querySelector("#saveSet").onclick=()=>{S.minutesPerDay=Math.max(15,Number(sh.querySelector("#s-mins").value)||180);
       S.cats.forEach(c=>{const el=sh.querySelector("#cat-"+CSS.escape(c.id));if(el&&el.value.trim())c.name=el.value.trim()});
       persist();closeSheet();render();toast("Settings saved")};
   });
+}
+async function installUpdate(raw,btn){
+  try{
+    if(!("caches" in window)||!("DecompressionStream" in window)||!navigator.serviceWorker||!navigator.serviceWorker.controller){toast("Updates need the installed app, opened online at least once.");return}
+    const parts=raw.replace(/\s+/g,"").split(":"), ver=parts[1], b64=parts.slice(2).join("");
+    const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    const html=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+    if(!/^<!doctype html>/i.test(html)||html.indexOf("ascension.")<0||html.indexOf('const STANDALONE=true')<0){toast("That update code is damaged. Copy it again.");return}
+    const c=await caches.open("ascension-override");
+    await c.put("./index.html",new Response(html,{headers:{"Content-Type":"text/html; charset=utf-8"}}));
+    if(btn)btn.textContent="Updated";
+    toast("Updating to version "+ver+"…");setTimeout(()=>location.reload(),900);
+  }catch(e){toast("That update code didn't work. Copy the whole code and try again.")}
 }
 function renderNote(){const t=document.getElementById("syncTxt");if(t)t.textContent=syncState==="cloud"?"Saved to your Claude account":"Saved on this device"}
 
